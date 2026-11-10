@@ -1,5 +1,6 @@
 import type { Category, Product, StoreSettings } from "@/lib/types";
 import type { CatalogTile } from "@/components/sections/NeedsSection";
+import { HERO_SCENE, STORY_SCENE } from "@/lib/landing-photos";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { NeedsSection } from "@/components/sections/NeedsSection";
 import { TrustStripSection } from "@/components/sections/TrustStripSection";
@@ -27,14 +28,12 @@ export function HomeSections({
   categoryProducts?: { category: Category; products: Product[] }[];
   tiles?: CatalogTile[];
 }) {
-  const heroImage = tiles.find((tile) => tile.image);
-  const storyImage = tiles.find((tile) => tile.image && tile.image !== heroImage?.image) ?? heroImage;
   return (
     <div>
       <HeroSection
         settings={settings}
-        image={heroImage?.image}
-        imageAlt={heroImage?.alt}
+        image={HERO_SCENE.src}
+        imageAlt={HERO_SCENE.alt}
         collections={tiles.map((tile) => ({ label: tile.title, href: tile.href }))}
       />
       <NeedsSection tiles={tiles} />
@@ -42,8 +41,8 @@ export function HomeSections({
       <FeaturedProductsSection groups={categoryProducts} products={products} />
       <StorySection
         settings={settings}
-        image={storyImage?.image}
-        imageAlt={storyImage?.alt}
+        image={STORY_SCENE.src}
+        imageAlt={STORY_SCENE.alt}
       />
       <StepsSection />
       <ReviewsSection settings={settings} />

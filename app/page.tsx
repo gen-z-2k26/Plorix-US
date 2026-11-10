@@ -8,6 +8,7 @@ import {
   getHomeCategories,
 } from "@/lib/api";
 import { toCardProduct } from "@/lib/catalog-card";
+import { sceneForCategory } from "@/lib/landing-photos";
 import { defaultPages } from "@/lib/types";
 
 export const revalidate = 60;
@@ -86,12 +87,13 @@ export default async function HomePage() {
         }))}
         tiles={groups.slice(0, 4).map((group) => {
           const sample = group.products[0];
+          const scene = sceneForCategory(group.category.slug);
           return {
             title: group.category.name,
             text: sample?.name || group.category.description || "Shop this category",
             href: `/collection/${group.category.slug}`,
-            image: sample?.images[0] || group.category.image || "",
-            alt: sample?.imageAlts[0] || sample?.name || group.category.name,
+            image: scene.src,
+            alt: scene.alt,
           };
         })}
       />
