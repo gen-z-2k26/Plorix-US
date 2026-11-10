@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { pageContainer, sectionYClass } from "@/lib/layout";
 import { cn } from "@/lib/utils";
+import { NEWSLETTER_SCENE } from "@/lib/landing-photos";
 import { toast } from "@/lib/toast-store";
 
 export function NewsletterSection({ settings }: { settings: StoreSettings }) {
@@ -18,13 +19,13 @@ export function NewsletterSection({ settings }: { settings: StoreSettings }) {
     >
       <div className={pageContainer()}>
         <div className="grid overflow-hidden rounded-3xl bg-card lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
-          <div className="dark relative min-h-56 bg-background sm:min-h-72">
+          <div className="relative min-h-56 sm:min-h-72">
             <Image
-              src="/brand/footer-image.jpg"
-              alt="Plorix"
+              src={NEWSLETTER_SCENE.src}
+              alt={NEWSLETTER_SCENE.alt}
               fill
               sizes="(min-width: 1024px) 36vw, 100vw"
-              className="object-contain"
+              className="object-cover"
             />
           </div>
           <div className="flex flex-col justify-center px-6 py-10 sm:px-10 lg:py-14">
