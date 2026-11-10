@@ -12,10 +12,8 @@ export const dynamic = "force-dynamic";
 export async function POST(request: Request) {
   const secret = (await getStripeWebhookSecret()).trim();
   if (!secret) {
-    return NextResponse.json(
-      { error: "Stripe webhook secret is not configured." },
-      { status: 500 },
-    );
+    console.warn("[stripe webhook] secret is not configured; event ignored");
+    return NextResponse.json({ received: true, ignored: "no webhook secret" });
   }
 
   const signature = request.headers.get("stripe-signature");
@@ -60,7 +58,7 @@ export async function POST(request: Request) {
           orderId,
           intentId: intent.id,
         });
-        return NextResponse.json({ error: "Amount mismatch." }, { status: 409 });
+        return NextResponse.json({ received: true, ignored: "amount mismatch" });
       }
       await markOrderPaid(orderId, intent.id);
     } else if (event.type === "payment_intent.payment_failed") {

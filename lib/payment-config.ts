@@ -116,11 +116,15 @@ export type PaymentSettingsInput = {
 const BLOB_PATH = "payments/config.enc";
 const PAYMENT_CONFIG_TAG = "payment-config";
 /**
- * Checkout and other dynamic routes skip the Next.js data cache, so this
- * process-local copy is what stops those requests from calling Blob.
+ * Process-local copy so checkout requests do not hit the data cache on every
+ * call. Other instances pick up an admin save within this window.
  * Admin saves on this instance replace it immediately.
  */
-const MEMORY_TTL_MS = 60 * 60 * 1000;
+const MEMORY_TTL_MS = 5 * 60 * 1000;
+/** After a failed Blob read with nothing cached, try again this soon. */
+const ERROR_RETRY_MS = 30 * 1000;
+
+class EnvelopeMissingError extends Error {}
 
 type EnvelopeCache = { found: false } | { found: true; raw: string };
 
@@ -204,38 +208,57 @@ function decryptStored(key: Buffer, raw: string) {
 }
 
 /**
- * Held until an admin save calls updateTag. Do not pass useCache:false:
- * that query flag forces a Blob CDN miss, and every miss counts as a
- * simple operation on the Hobby plan.
+ * Reads straight from Blob origin. The file is overwritten in place, so a CDN
+ * read right after a save can return the previous version, and that stale copy
+ * would then be held by the data cache until the next save.
+ */
+async function readEnvelopeFromOrigin(): Promise<EnvelopeCache> {
+  const result = await get(BLOB_PATH, { access: "private", useCache: false });
+  if (!result || result.statusCode !== 200 || !result.stream) {
+    return { found: false };
+  }
+  return { found: true, raw: await new Response(result.stream).text() };
+}
+
+/**
+ * Held until an admin save calls updateTag, so origin reads stay rare.
+ * A missing file throws so it is never stored without expiry.
  */
 const readEnvelopeCached = unstable_cache(
-  async (): Promise<EnvelopeCache> => {
-    const result = await get(BLOB_PATH, { access: "private" });
-    if (!result || result.statusCode !== 200 || !result.stream) {
-      return { found: false };
-    }
-    return { found: true, raw: await new Response(result.stream).text() };
+  async () => {
+    const entry = await readEnvelopeFromOrigin();
+    if (!entry.found) throw new EnvelopeMissingError();
+    return entry.raw;
   },
   ["payments-config-envelope"],
   { revalidate: false, tags: [PAYMENT_CONFIG_TAG] },
 );
 
-function rememberEnvelope(raw: string | null) {
-  memory = { raw, at: Date.now() };
+function rememberEnvelope(raw: string | null, ttlMs = MEMORY_TTL_MS) {
+  memory = { raw, at: Date.now() - (MEMORY_TTL_MS - ttlMs) };
 }
 
-async function loadEnvelope(): Promise<string | null> {
+async function loadEnvelope(fresh = false): Promise<string | null> {
   try {
-    const entry = await readEnvelopeCached();
-    const raw = entry.found ? entry.raw : null;
+    let raw: string | null;
+    if (fresh) {
+      const entry = await readEnvelopeFromOrigin();
+      raw = entry.found ? entry.raw : null;
+    } else {
+      raw = await readEnvelopeCached();
+    }
     rememberEnvelope(raw);
     return raw;
-  } catch {
-    if (memory) {
-      memory = { raw: memory.raw, at: Date.now() };
+  } catch (error) {
+    if (error instanceof EnvelopeMissingError) {
+      rememberEnvelope(null);
+      return null;
+    }
+    if (memory?.raw) {
+      rememberEnvelope(memory.raw, ERROR_RETRY_MS);
       return memory.raw;
     }
-    rememberEnvelope(null);
+    rememberEnvelope(null, ERROR_RETRY_MS);
     return null;
   }
 }
@@ -244,7 +267,7 @@ async function readEnvelope(fresh = false): Promise<string | null> {
   if (!blobTokenReady()) return null;
   if (!fresh && memory && Date.now() - memory.at < MEMORY_TTL_MS) return memory.raw;
   if (!fresh && inflight) return inflight;
-  const task = loadEnvelope().finally(() => {
+  const task = loadEnvelope(fresh).finally(() => {
     if (inflight === task) inflight = null;
   });
   if (!fresh) inflight = task;
@@ -294,7 +317,7 @@ export async function getPaymentAccounts(options?: {
 }
 
 export async function getAdminPaymentView(): Promise<AdminPaymentView> {
-  const accounts = await getPaymentAccounts();
+  const accounts = await getPaymentAccounts({ fresh: true });
   const stripeReady = Boolean(accounts.stripe.publishableKey && accounts.stripe.secretKey);
   const paypalReady = Boolean(accounts.paypal.clientId && accounts.paypal.clientSecret);
   const affirmReady = Boolean(accounts.affirm.publicKey && accounts.affirm.privateKey);
@@ -410,7 +433,7 @@ export async function savePaymentSettings(input: PaymentSettingsInput) {
   if (!key) {
     throw new Error("Set PAYMENT_CONFIG_KEY before saving payment accounts.");
   }
-  const current = await getPaymentAccounts();
+  const current = await getPaymentAccounts({ fresh: true });
   const baseline: StoredPaymentConfig = current.managed ? current : emptyStored();
   const next = validatePaymentInput(input, baseline);
   await writeStored(next);
@@ -421,7 +444,7 @@ export async function clearProviderSecrets(provider: PaymentProviderId) {
   if (!key) {
     throw new Error("Set PAYMENT_CONFIG_KEY before saving payment accounts.");
   }
-  const current = await getPaymentAccounts();
+  const current = await getPaymentAccounts({ fresh: true });
   const next: StoredPaymentConfig = current.managed
     ? {
         stripe: { ...current.stripe },

@@ -253,7 +253,6 @@ export async function cancelUnpaidOrder(orderId: string): Promise<void> {
     if (isPaidStatus(existing)) return;
     if (existing.status === "cancelled" || existing.status === "failed") return;
     await wooPut<WooOrder>(`orders/${orderId}`, { status: "cancelled" });
-    refreshCatalog();
   });
 }
 
@@ -263,6 +262,5 @@ export async function failUnpaidOrder(orderId: string): Promise<void> {
     if (isPaidStatus(existing)) return;
     if (existing.status === "cancelled" || existing.status === "failed") return;
     await wooPut<WooOrder>(`orders/${orderId}`, { status: "failed" });
-    refreshCatalog();
   });
 }

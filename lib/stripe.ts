@@ -38,8 +38,9 @@ export async function getStripeWebhookSecret() {
   return accounts.stripe.webhookSecret;
 }
 
-export async function getStripe(): Promise<Stripe> {
-  const accounts = await getPaymentAccounts({ fresh: true });
+/** Pass fresh only from admin actions. Each fresh read is an uncached Blob request. */
+export async function getStripe(options?: { fresh?: boolean }): Promise<Stripe> {
+  const accounts = await getPaymentAccounts({ fresh: options?.fresh });
   const key = accounts.stripe.secretKey;
   if (!key) {
     throw new Error("Stripe is not configured. Add a secret key in Admin.");
@@ -89,7 +90,7 @@ export async function ensureStripeWalletDomains(extraHosts: string[] = []) {
   if (!accounts.stripe.enabled || !accounts.stripe.secretKey) return [];
   const wanted = walletDomainCandidates(extraHosts);
   if (!wanted.length) return [];
-  const stripe = await getStripe();
+  const stripe = await getStripe({ fresh: true });
   const existing = new Map<string, { id: string; enabled: boolean }>();
   for await (const domain of stripe.paymentMethodDomains.list({ limit: 100 })) {
     existing.set(domain.domain_name.toLowerCase(), {

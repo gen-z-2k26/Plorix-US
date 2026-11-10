@@ -199,9 +199,37 @@ async function createCardPaymentIntent(input: {
   });
 }
 
+const sessionHits = new Map<string, { count: number; resetAt: number }>();
+const SESSION_WINDOW_MS = 60_000;
+const SESSION_MAX_HITS = 10;
+
+async function checkoutRateLimited() {
+  const headerList = await headers();
+  const key =
+    headerList.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    headerList.get("x-real-ip") ||
+    "local";
+  const now = Date.now();
+  if (sessionHits.size > 5000) {
+    for (const [entry, value] of sessionHits) {
+      if (value.resetAt < now) sessionHits.delete(entry);
+    }
+  }
+  const current = sessionHits.get(key);
+  if (!current || current.resetAt < now) {
+    sessionHits.set(key, { count: 1, resetAt: now + SESSION_WINDOW_MS });
+    return false;
+  }
+  current.count += 1;
+  return current.count > SESSION_MAX_HITS;
+}
+
 async function createCheckoutSession(
   details: CheckoutDetails,
 ): Promise<CheckoutSessionResult> {
+  if (await checkoutRateLimited()) {
+    throw new Error("Too many checkout attempts. Please wait a minute and try again.");
+  }
   const mockPayment = isMockPaymentEnabled();
   const methods = mockPayment ? [] : await getEnabledCheckoutMethods();
   const selected = details.paymentKind
@@ -416,7 +444,7 @@ async function beginProviderPayment(input: {
   if (!intent.client_secret) {
     throw new Error("Could not start Stripe payment.");
   }
-  const accounts = await getPaymentAccounts({ fresh: true });
+  const accounts = await getPaymentAccounts();
   const publishableKey = accounts.stripe.publishableKey.trim();
   const secretKey = accounts.stripe.secretKey.trim();
   const secretLive = secretKey.includes("_live_");
