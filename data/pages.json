@@ -1,9 +1,9 @@
 {
   "about": {
-    "eyebrow": "About DROVIIA",
+    "eyebrow": "About Plorix",
     "title": "Technology for Everyday Living. Confidence in Every Purchase.",
-    "intro": "At DROVIIA, we believe technology should make life easier, more connected, and more enjoyable. From electronics that support your everyday routine to accessories that enhance your home, work, and entertainment, our goal is to make shopping for technology simple, convenient, and accessible.",
-    "body": "Operated by Modern Closet Spaces LLC, DROVIIA is a US-focused online electronics store built around a straightforward idea: great technology deserves a better shopping experience. We bring together product information, flexible payment options, free standard shipping, and accessible customer support to help you shop with greater confidence.",
+    "intro": "At Plorix, we believe technology should make life easier, more connected, and more enjoyable. From electronics that support your everyday routine to accessories that enhance your home, work, and entertainment, our goal is to make shopping for technology simple, convenient, and accessible.",
+    "body": "Operated by Plorix Electronics Inc., Plorix is a US-focused online electronics store built around a straightforward idea: great technology deserves a better shopping experience. We bring together product information, flexible payment options, shipping charges shown at checkout, and accessible customer support to help you shop with greater confidence.",
     "image": "https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=1200",
     "values": [
       {
@@ -32,8 +32,8 @@
         "title": "Our story",
         "paragraphs": [
           "Built around a better way to shop. Technology is constantly evolving. New devices, smarter accessories, and innovative solutions are changing how people live and work. Finding the right product should not feel complicated.",
-          "DROVIIA was created to offer a more straightforward online shopping experience, one where customers can explore electronics, compare features, understand their options, and make informed purchasing decisions.",
-          "A good electronics store should offer more than a product catalog. It should provide clarity, convenience, and dependable support throughout the customer journey. That is the experience we are working to build at DROVIIA."
+          "Plorix was created to offer a more straightforward online shopping experience, one where customers can explore electronics, compare features, understand their options, and make informed purchasing decisions.",
+          "A good electronics store should offer more than a product catalog. It should provide clarity, convenience, and dependable support throughout the customer journey. That is the experience we are working to build at Plorix."
         ]
       },
       {
@@ -46,7 +46,7 @@
           "Product discovery: Clear product listings that help you explore features and specifications.",
           "Everyday convenience: A shopping experience designed to be simple from browsing to checkout.",
           "Flexible payments: Access to eligible Buy Now, Pay Later options.",
-          "Delivery transparency: Published shipping timelines and free standard domestic shipping.",
+          "Delivery transparency: Shipping charges and delivery estimates are shown before you pay.",
           "Customer support: Help with product questions, orders, deliveries, and returns."
         ]
       },
@@ -61,19 +61,19 @@
         "title": "Our vision",
         "paragraphs": [
           "To become a trusted destination for electronics and accessories by putting clarity, convenience, and customer experience at the center of online shopping.",
-          "We see DROVIIA as more than a place to purchase products. Our vision is to create a shopping destination where technology feels approachable, product choices are easier to understand, and customers know where to turn when they need help."
+          "We see Plorix as more than a place to purchase products. Our vision is to create a shopping destination where technology feels approachable, product choices are easier to understand, and customers know where to turn when they need help."
         ]
       },
       {
-        "title": "Why shop with DROVIIA?",
+        "title": "Why shop with Plorix?",
         "items": [
           {
             "title": "Free standard shipping",
-            "text": "Enjoy free standard shipping on eligible orders within the United States, with no minimum purchase requirement. Typical processing is 1-2 business days, followed by an estimated 3-7 business days in transit."
+            "text": "Shipping charges, if they apply, are shown at checkout before you pay. Delivery estimates depend on the product, destination, and the service shown there."
           },
           {
             "title": "Flexible ways to pay",
-            "text": "Eligible Buy Now, Pay Later options include Afterpay as a primary payment service. Affirm, PayPal, or card payments may be available depending on checkout configuration and provider eligibility."
+            "text": "Card, debit, and installment options appear only when they are enabled at checkout. Approval and repayment terms belong to the payment provider."
           },
           {
             "title": "A clear 30-day return policy",
@@ -99,28 +99,28 @@
       {
         "title": "Proudly serving customers across the United States",
         "paragraphs": [
-          "DROVIIA is operated under Modern Closet Spaces LLC, with a business address in Gardena, California. Our online store focuses on serving eligible delivery addresses throughout the United States.",
+          "Plorix is operated under Plorix Electronics Inc., with a business address in Anchorage, Alaska. Our online store focuses on serving eligible delivery addresses throughout the United States.",
           "Whether you are shopping for everyday electronics or exploring your next technology upgrade, we aim to make the experience convenient wherever you are located within our supported delivery area."
         ]
       }
     ],
     "ctaTitle": "Your next technology discovery starts here",
-    "ctaBody": "Whether you are looking for something practical, exploring new electronics, or upgrading the technology you use every day, DROVIIA is here to make the shopping experience simpler. Explore technology. Shop with confidence. Experience DROVIIA."
+    "ctaBody": "Whether you are looking for something practical, exploring new electronics, or upgrading the technology you use every day, Plorix is here to make the shopping experience simpler. Explore technology. Shop with confidence. Experience Plorix."
   },
   "contact": {
     "eyebrow": "Contact us",
     "title": "We're here to help",
-    "intro": "Welcome to DROVIIA. Whether you have a question about a product, need assistance with an existing order, or want to learn more about our shipping, payment, and return policies, our customer support team is here to help. We believe great customer service is an essential part of a great shopping experience.",
+    "intro": "Welcome to Plorix. Whether you have a question about a product, need assistance with an existing order, or want to learn more about our shipping, payment, and return policies, our customer support team is here to help. We believe great customer service is an essential part of a great shopping experience.",
     "channels": [
       {
         "title": "Email support",
-        "detail": "info@droviia.us",
+        "detail": "info@plorix.us",
         "text": "For product inquiries, order updates, returns, refunds, payment questions, and general customer assistance."
       },
       {
         "title": "Phone support",
-        "detail": "+1 (424) 329-0223",
-        "text": "Business hours: Monday-Friday, 9:00 AM-5:00 PM Pacific Time (PT)."
+        "detail": "+1 (907) 272-8424",
+        "text": "Business hours: Monday-Friday, 9:00 AM-5:00 PM."
       },
       {
         "title": "24/7 live chat",
@@ -140,7 +140,7 @@
       },
       {
         "title": "Shipping and delivery",
-        "text": "We offer free standard shipping on eligible domestic orders, with an estimated total delivery timeframe of 4-9 business days."
+        "text": "Shipping charges, if they apply, are shown at checkout before an order is submitted."
       },
       {
         "title": "Returns and refunds",
@@ -148,16 +148,16 @@
       },
       {
         "title": "Payment and Buy Now, Pay Later",
-        "text": "Afterpay is one of our primary payment services. Affirm and other payment options may also be available, depending on eligibility and the options displayed at checkout. For installment schedules, financing approvals, or payment collection questions, please contact the relevant financing provider."
+        "text": "Installment options may appear at checkout when a provider is enabled. Approval, schedules, and fees are set by that provider."
       }
     ],
     "formNote": "Have a question or need assistance? Use this form or email us directly. Please provide as much relevant information as possible so our team can understand your request.",
     "securityNote": "For your security, do not include passwords, full payment card numbers, card security codes, or other sensitive financial credentials in your message.",
     "hours": [
       { "channel": "Live chat", "availability": "24/7" },
-      { "channel": "Email", "availability": "info@droviia.us" },
-      { "channel": "Phone", "availability": "Monday-Friday, 9 AM-5 PM PT" },
-      { "channel": "Business office hours", "availability": "Monday-Friday, 9 AM-5 PM PT" }
+      { "channel": "Email", "availability": "info@plorix.us" },
+      { "channel": "Phone", "availability": "Monday-Friday, 9:00 AM-5:00 PM" },
+      { "channel": "Business office hours", "availability": "Monday-Friday, 9:00 AM-5:00 PM" }
     ],
     "faqs": [
       {
@@ -166,7 +166,7 @@
       },
       {
         "question": "Do you offer free shipping?",
-        "answer": "Yes. We offer free standard shipping on eligible orders within our supported United States delivery area, with no minimum order requirement."
+        "answer": "Shipping charges, if they apply, are disclosed during checkout before you confirm payment."
       },
       {
         "question": "Can I cancel my order?",
@@ -174,7 +174,7 @@
       },
       {
         "question": "How do I request a return?",
-        "answer": "Email info@droviia.us or contact our live chat within the applicable return window. Our team will review your request and provide return instructions."
+        "answer": "Email info@plorix.us or contact our live chat within the applicable return window. Our team will review your request and provide return instructions."
       },
       {
         "question": "Can I visit your business address to return an item?",
@@ -182,15 +182,15 @@
       },
       {
         "question": "Which payment methods do you accept?",
-        "answer": "Afterpay is a primary payment option. Other methods, including Affirm, PayPal, or card payments, may be available. The checkout page displays the payment methods currently supported for your purchase."
+        "answer": "The checkout page displays the payment methods currently supported for your purchase, which can include cards and installment options when a provider is enabled."
       }
     ]
   },
   "commitment": {
     "eyebrow": "Our commitment",
     "title": "Better technology. Clearer choices. A shopping experience built around you.",
-    "intro": "At DROVIIA, we believe purchasing technology should be simple, transparent, and convenient. Every product you explore, every order you place, and every question you ask matters to us.",
-    "body": "Operated by Modern Closet Spaces LLC, DROVIIA is committed to creating an online shopping experience where customers can make informed decisions, understand their purchasing options, and access support when they need it. Our commitment goes beyond offering electronics and accessories. It is about building customer confidence through clear information, straightforward policies, and a consistent focus on service. Because great technology deserves a shopping experience you can feel confident about.",
+    "intro": "At Plorix, we believe purchasing technology should be simple, transparent, and convenient. Every product you explore, every order you place, and every question you ask matters to us.",
+    "body": "Operated by Plorix Electronics Inc., Plorix is committed to creating an online shopping experience where customers can make informed decisions, understand their purchasing options, and access support when they need it. Our commitment goes beyond offering electronics and accessories. It is about building customer confidence through clear information, straightforward policies, and a consistent focus on service. Because great technology deserves a shopping experience you can feel confident about.",
     "sections": [
       {
         "title": "1. Our promise to you",
@@ -217,15 +217,15 @@
       {
         "title": "3. Free shipping without a minimum purchase",
         "paragraphs": [
-          "Eligible domestic orders receive free standard shipping, with no minimum purchase requirement.",
-          "Standard shipping cost: free. Minimum order requirement: none. Order processing: 1-2 business days. Estimated transit: 3-7 business days. Estimated total delivery: 4-9 business days. Order cut-off: 4:00 PM Pacific Time.",
+          "Shipping charges, if they apply, are shown at checkout before you pay.",
+          "Shipping charges, if they apply, are disclosed during checkout. Delivery estimates depend on the product, destination, and the service shown before you pay.",
           "Delivery estimates may vary because of carrier conditions, holidays, weather, or other circumstances outside our control. We aim to communicate shipping expectations clearly so customers can plan accordingly."
         ]
       },
       {
         "title": "4. Flexible payment options",
         "paragraphs": [
-          "DROVIIA offers eligible Buy Now, Pay Later services, with Afterpay as one of our primary payment options. Other payment methods, including Affirm, PayPal, and supported card payments, may be available depending on checkout configuration and provider eligibility.",
+          "Plorix may offer installment payment options when an eligible provider is enabled at checkout. Card payments and other methods appear only when they are shown during checkout.",
           "Financing approval, installment schedules, interest rates, and fees are determined by the financing provider. Customers should always review the full repayment terms before selecting a financing option."
         ]
       },
@@ -247,7 +247,7 @@
         "title": "6. Support beyond checkout",
         "paragraphs": [
           "We believe customer service should remain accessible after an order has been placed. Whether you are checking an order, asking about a product, or requesting return assistance, our team is available through multiple contact channels.",
-          "Live chat is available 24/7. Email info@droviia.us. Phone +1 (424) 329-0223. Business hours Monday-Friday, 9:00 AM-5:00 PM Pacific Time. Response times and resolution requirements may vary depending on the issue."
+          "Live chat is available 24/7. Email info@plorix.us. Phone +1 (907) 272-8424. Business hours Monday-Friday, 9:00 AM-5:00 PM. Response times and resolution requirements may vary depending on the issue."
         ]
       },
       {
@@ -299,7 +299,7 @@
         ]
       },
       {
-        "title": "11. Continuously improving the DROVIIA experience",
+        "title": "11. Continuously improving the Plorix experience",
         "paragraphs": [
           "Technology evolves, and so do customer expectations. We aim to keep improving how customers discover products, navigate our website, complete checkout, and receive support. We believe trust is built through consistent effort and clear communication."
         ],
@@ -359,13 +359,13 @@
         "title": "13. Your feedback matters",
         "paragraphs": [
           "We welcome questions, suggestions, and constructive feedback about your shopping experience. Whether you have an idea for improving our website, need clarification about a product, or want to share a concern, you can contact our team. Customer feedback can help us understand what is working and where improvement may be needed.",
-          "Email: info@droviia.us. Phone: +1 (424) 329-0223. Live chat: available 24/7."
+          "Email: info@plorix.us. Phone: +1 (907) 272-8424. Live chat: available 24/7."
         ]
       },
       {
         "title": "14. Our commitment to the future",
         "paragraphs": [
-          "We want DROVIIA to become a shopping destination customers associate with clarity, convenience, and helpful service. We understand that customer trust must be earned through actions and consistency. That is the standard we aim to work toward."
+          "We want Plorix to become a shopping destination customers associate with clarity, convenience, and helpful service. We understand that customer trust must be earned through actions and consistency. That is the standard we aim to work toward."
         ],
         "bullets": [
           "Useful technology",
@@ -378,35 +378,35 @@
       }
     ],
     "ctaTitle": "More than electronics. A commitment to your experience.",
-    "ctaBody": "At DROVIIA, our commitment is simple: make technology easier to discover, purchasing easier to understand, and customer support easier to access. We appreciate the opportunity to be part of your technology shopping journey."
+    "ctaBody": "At Plorix, our commitment is simple: make technology easier to discover, purchasing easier to understand, and customer support easier to access. We appreciate the opportunity to be part of your technology shopping journey."
   },
   "faq": {
     "eyebrow": "Help Center",
-    "title": "Everything you need to know about shopping at DROVIIA",
-    "intro": "We've answered common questions about our products, orders, shipping, payments, Buy Now Pay Later options, returns, refunds, and warranty support. Can't find what you're looking for? Email info@droviia.us, call +1 (424) 329-0223, or use live chat, available 24/7.",
+    "title": "Everything you need to know about shopping at Plorix",
+    "intro": "We've answered common questions about our products, orders, shipping, payments, Buy Now Pay Later options, returns, refunds, and warranty support. Can't find what you're looking for? Email info@plorix.us, call +1 (907) 272-8424, or use live chat, available 24/7.",
     "groups": [
       {
         "title": "General questions",
         "items": [
           {
-            "question": "What is DROVIIA?",
-            "answer": "DROVIIA is an online store offering electronics, electronic accessories, and technology-related products to customers across our supported delivery areas in the United States. Our store is operated by Modern Closet Spaces LLC."
+            "question": "What is Plorix?",
+            "answer": "Plorix is an online store offering electronics, electronic accessories, and technology-related products to customers across our supported delivery areas in the United States. Our store is operated by Plorix Electronics Inc.."
           },
           {
-            "question": "Where is DROVIIA located?",
-            "answer": "Our business address is 1320 W El Segundo Blvd Ste E, Gardena, CA 90247, United States. We operate an online shopping website at https://droviia.us. Our business address should not be treated as a retail showroom or an authorized return location."
+            "question": "Where is Plorix located?",
+            "answer": "Our business address is 2607 Fairbanks St, Anchorage, AK 99503, United States. We operate an online shopping website at https://plorix.us. Our business address should not be treated as a retail showroom or an authorized return location."
           },
           {
             "question": "Do you have a physical store?",
-            "answer": "DROVIIA operates as an online store. We do not currently advertise a public retail showroom or in-person shopping service."
+            "answer": "Plorix operates as an online store. We do not currently advertise a public retail showroom or in-person shopping service."
           },
           {
-            "question": "Is DROVIIA available to customers outside the USA?",
+            "question": "Is Plorix available to customers outside the USA?",
             "answer": "No. We currently focus on orders delivered to eligible addresses within the United States."
           },
           {
             "question": "How can I contact customer support?",
-            "answer": "You can reach us through email, phone, or our website's live chat. Email: info@droviia.us. Phone: +1 (424) 329-0223. Live chat: available 24/7. Business hours: Monday-Friday, 9 AM-5 PM Pacific Time."
+            "answer": "You can reach us through email, phone, or our website's live chat. Email: info@plorix.us. Phone: +1 (907) 272-8424. Live chat: available 24/7. Business hours: Monday-Friday, 9:00 AM-5:00 PM."
           }
         ]
       },
@@ -444,7 +444,7 @@
         "items": [
           {
             "question": "How do I place an order?",
-            "answer": "Browse droviia.us, select your products, add them to your cart, and proceed to checkout. Enter your shipping details, select an available payment method, review the total, and complete your purchase."
+            "answer": "Browse plorix.us, select your products, add them to your cart, and proceed to checkout. Enter your shipping details, select an available payment method, review the total, and complete your purchase."
           },
           {
             "question": "Will I receive an order confirmation?",
@@ -473,7 +473,7 @@
         "items": [
           {
             "question": "Do you offer free shipping?",
-            "answer": "Yes. We offer free standard shipping on eligible domestic orders within our supported United States delivery area, with no minimum order amount."
+            "answer": "Shipping charges, if they apply, are calculated or disclosed during checkout before an order is submitted."
           },
           {
             "question": "How long does shipping take?",
@@ -481,7 +481,7 @@
           },
           {
             "question": "What is your daily order cut-off time?",
-            "answer": "Our standard order cut-off is 4:00 PM Pacific Time, Monday through Friday, excluding applicable holidays. Orders placed after the cut-off generally begin processing the next business day."
+            "answer": "Orders are processed according to the cut-off time published on the website or shown during checkout. Orders received after that cut-off may begin processing on the next business day."
           },
           {
             "question": "Which shipping carriers do you use?",
@@ -518,7 +518,7 @@
           },
           {
             "question": "What payment methods do you accept?",
-            "answer": "Afterpay is one of our primary payment options. Other methods, including Affirm, PayPal, and supported card payments, may be available at different times. The payment methods displayed at checkout are the options currently available for your purchase."
+            "answer": "Plorix accepts the payment methods displayed during checkout. Those can include credit cards, debit cards, and installment options when an eligible provider is enabled."
           },
           {
             "question": "Can I pay using a credit or debit card?",
@@ -546,16 +546,16 @@
             "answer": "Buy Now, Pay Later allows eligible customers to purchase products and pay according to an installment or deferred payment arrangement offered by a third-party provider."
           },
           {
-            "question": "Does DROVIIA accept Afterpay?",
-            "answer": "Yes. Afterpay is one of our primary payment options, subject to availability and provider approval."
+            "question": "Does Plorix offer installment payments?",
+            "answer": "Yes. Installment payment options may appear when an eligible provider is enabled at checkout, subject to provider approval."
           },
           {
             "question": "Do you offer Affirm?",
             "answer": "Affirm may be available for eligible transactions when displayed during checkout."
           },
           {
-            "question": "How does Afterpay work?",
-            "answer": "Depending on the plan offered, Afterpay may allow qualifying purchases to be divided into installments. For example, an eligible Pay in 4 arrangement may divide the purchase into four payments over approximately six weeks. Actual payment dates, eligibility, and terms are determined by Afterpay."
+            "question": "How do installment payments work?",
+            "answer": "When an installment provider is enabled, it may divide an eligible purchase into scheduled payments. Eligibility, dates, and fees are set by that provider, not by Plorix."
           },
           {
             "question": "Is Buy Now, Pay Later interest-free?",
@@ -566,7 +566,7 @@
             "answer": "Yes. Financing approval is determined independently by the provider."
           },
           {
-            "question": "Can I return an order purchased with Afterpay or Affirm?",
+            "question": "Can I return an order paid in installments?",
             "answer": "Yes. Eligible purchases remain subject to our standard return and refund policy. Approved refunds are processed through the original financing provider, which handles the resulting installment adjustments."
           },
           {
@@ -596,11 +596,11 @@
           },
           {
             "question": "How do I start a return?",
-            "answer": "Email info@droviia.us or contact our live chat with your order number and reason for return. Our team will review the request and provide the appropriate return instructions."
+            "answer": "Email info@plorix.us or contact our live chat with your order number and reason for return. Our team will review the request and provide the appropriate return instructions."
           },
           {
             "question": "Can I send a return to your business address?",
-            "answer": "No. Do not send returns to our Gardena, California business address unless our team specifically authorizes that destination."
+            "answer": "No. Do not send returns to our Anchorage, Alaska business address unless our team specifically authorizes that destination."
           },
           {
             "question": "Do you offer exchanges?",
@@ -632,8 +632,8 @@
             "answer": "If cancellation is approved and payment was collected, we will initiate the applicable refund promptly after cancellation confirmation."
           },
           {
-            "question": "What happens to my Afterpay installments after a refund?",
-            "answer": "Afterpay determines how the approved refund affects your remaining installments and amounts already paid."
+            "question": "What happens to installments after a refund?",
+            "answer": "The installment provider determines how an approved refund affects remaining payments and amounts already paid."
           },
           {
             "question": "Will I receive a refund for a discounted product?",
@@ -649,7 +649,7 @@
             "answer": "No. Warranty availability varies by product and manufacturer."
           },
           {
-            "question": "Does DROVIIA provide a universal one-year warranty?",
+            "question": "Does Plorix provide a universal one-year warranty?",
             "answer": "No. We do not promise a blanket one-year warranty on all products."
           },
           {
@@ -683,7 +683,7 @@
           },
           {
             "question": "Can I request information about my personal data?",
-            "answer": "You may contact info@droviia.us with a privacy-related request. Applicable rights depend on relevant privacy laws."
+            "answer": "You may contact info@plorix.us with a privacy-related request. Applicable rights depend on relevant privacy laws."
           },
           {
             "question": "Will you ask for my payment password?",
@@ -696,15 +696,15 @@
         "items": [
           {
             "question": "What are your customer support hours?",
-            "answer": "Our business support hours are Monday through Friday, 9:00 AM-5:00 PM Pacific Time. Our website also offers 24/7 live chat."
+            "answer": "Our business support hours are Monday through Friday, 9:00 AM-5:00 PM. Our website also offers 24/7 live chat."
           },
           {
             "question": "What is your customer support email?",
-            "answer": "info@droviia.us"
+            "answer": "info@plorix.us"
           },
           {
             "question": "What is your customer support phone number?",
-            "answer": "+1 (424) 329-0223"
+            "answer": "+1 (907) 272-8424"
           },
           {
             "question": "What information should I provide when contacting support?",

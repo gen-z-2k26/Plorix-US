@@ -16,11 +16,11 @@ const pillars = [
   },
   {
     title: "Shipping you can review",
-    text: "Standard shipping is $5 under $100 and free at $100 or more. Freight for large appliances is shown at checkout.",
+    text: "Shipping charges, when they apply, are shown at checkout before you pay.",
   },
   {
     title: "Straightforward returns",
-    text: "Eligible items have a 30-day window. Conditions apply, return shipping is paid by the customer, and a $5 restocking fee applies to standard non-defective returns.",
+    text: "Eligible purchases have a 30-day window. Approved returns have a $0 restocking fee and free return shipping.",
   },
 ];
 
@@ -34,7 +34,7 @@ export function CommitmentSection() {
         <SectionHeader
           eyebrow="Our commitment"
           title="Clear information, then support when you need it"
-          subtitle="The same standards apply whether the order is a styling tool or a major appliance."
+          subtitle="The same standards apply whether the order is a component or a complete setup."
           titleId="commitment-heading"
           action={
             <Link

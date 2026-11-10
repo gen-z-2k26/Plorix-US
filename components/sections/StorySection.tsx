@@ -17,13 +17,13 @@ export function StorySection({ settings }: { settings: StoreSettings }) {
           "grid items-center gap-8 lg:grid-cols-2 lg:gap-14",
         )}
       >
-        <RevealImage className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-muted">
+        <RevealImage className="dark relative flex aspect-[4/3] items-center justify-center overflow-hidden rounded-2xl bg-background p-10">
           <Image
-            src="/brand/collection-climate.jpg"
-            alt="Bright living room kept comfortable with a wall-mounted air conditioner"
-            fill
-            sizes="(min-width: 1024px) 40vw, 100vw"
-            className="object-cover"
+            src="/brand/plorix-logo-white.png"
+            alt="Plorix"
+            width={640}
+            height={140}
+            className="h-auto w-full max-w-md object-contain"
           />
         </RevealImage>
 
@@ -35,12 +35,12 @@ export function StorySection({ settings }: { settings: StoreSettings }) {
             id="story-heading"
             className="font-display text-balance text-3xl sm:text-4xl"
           >
-            A better home starts with the right essentials
+            Technology shopping, made straightforward
           </h2>
           <p className="text-pretty text-lg leading-relaxed text-muted-foreground">
-            DROVIIA is a U.S. online shop for home appliances, climate comfort,
-            and personal care, operated by {settings.contact.legalName} in
-            Gardena, California.
+            {settings.name} is a U.S. online shop for electronics, computer
+            components, gaming equipment, and technology accessories, operated
+            by {settings.contact.legalName} in Anchorage, Alaska.
           </p>
           <ul className="space-y-3 text-sm leading-relaxed text-muted-foreground">
             <li>Product details, prices, and shipping charges shown before checkout.</li>

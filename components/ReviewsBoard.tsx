@@ -76,7 +76,7 @@ export function ReviewsBoard({
               {total} reviews from 50 states
             </p>
             <p className="text-sm font-medium">
-              {recommend}% of these shoppers recommend Droviia
+              {recommend}% of these shoppers recommend Plorix
             </p>
           </div>
 
@@ -238,7 +238,7 @@ export function ReviewsBoard({
       <div className="rounded-3xl border border-border bg-muted/40 px-6 py-8 text-center">
         <p className="font-display text-2xl">Shop the catalog</p>
         <p className="mx-auto mt-2 max-w-md text-pretty text-sm text-muted-foreground">
-          These Droviia notes come from shoppers in cities across the United States.
+          These Plorix notes come from shoppers in cities across the United States.
         </p>
         <Link
           href="/products"

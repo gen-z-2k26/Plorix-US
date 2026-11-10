@@ -1,8 +1,8 @@
 {
-  "id": "droviia",
-  "name": "DROVIIA",
-  "tagline": "Everyday essentials for better living",
-  "logo": "/brand/droviia-logo-dark.png",
+  "id": "plorix",
+  "name": "Plorix",
+  "tagline": "Technology Made Simple",
+  "logo": "/brand/plorix-logo-dark.png",
   "currency": "",
   "currencySymbol": "",
   "currencyPrefix": "",
@@ -12,88 +12,170 @@
   "decimalSeparator": ".",
   "locale": "en-US",
   "contact": {
-    "email": "info@droviia.us",
-    "phone": "+1 (424) 329-0223",
-    "address": "1320 W El Segundo Blvd Ste E, Gardena, CA 90247, United States",
-    "openingHours": "Mon-Fri, 9:00 AM-5:00 PM PT",
-    "legalName": "Modern Closet Spaces LLC",
+    "email": "info@plorix.us",
+    "phone": "+1 (907) 272-8424",
+    "address": "2607 Fairbanks St, Anchorage, AK 99503, United States",
+    "openingHours": "Monday-Friday, 9:00 AM-5:00 PM",
+    "legalName": "Plorix Electronics Inc.",
     "vatNumber": ""
   },
   "promoBanner": "",
   "promoId": "",
   "promoCoupon": "",
   "hero": {
-    "headline": "Comfort, convenience, and the essentials for home",
-    "support": "Kitchen appliances, climate control, and personal care, with prices, shipping, and support you can review before you buy."
+    "headline": "Technology made simple",
+    "support": "Computers, gaming gear, monitors, and accessories, with prices, shipping, and support you can review before you buy."
   },
   "navigation": {
     "header": [
-      { "label": "Home", "href": "/" },
-      { "label": "Shop", "href": "/products" },
-      { "label": "About", "href": "/about-us" },
-      { "label": "FAQs", "href": "/faqs" },
-      { "label": "Contact", "href": "/contact-us" }
+      {
+        "label": "Home",
+        "href": "/"
+      },
+      {
+        "label": "Shop",
+        "href": "/products"
+      },
+      {
+        "label": "About",
+        "href": "/about-us"
+      },
+      {
+        "label": "FAQs",
+        "href": "/faqs"
+      },
+      {
+        "label": "Contact",
+        "href": "/contact-us"
+      }
     ],
     "footerColumns": [
       {
         "title": "Quick Links",
         "slug": "footer-discover",
         "links": [
-          { "label": "Home", "href": "/" },
-          { "label": "Shop All", "href": "/products" },
-          { "label": "Reviews", "href": "/reviews" },
-          { "label": "Categories", "href": "/products" },
-          { "label": "About Us", "href": "/about-us" },
-          { "label": "Our Commitment", "href": "/our-commitment" },
-          { "label": "Contact Us", "href": "/contact-us" }
+          {
+            "label": "Home",
+            "href": "/"
+          },
+          {
+            "label": "Shop All Electronics",
+            "href": "/products"
+          },
+          {
+            "label": "Reviews",
+            "href": "/reviews"
+          },
+          {
+            "label": "Categories",
+            "href": "/products"
+          },
+          {
+            "label": "About Us",
+            "href": "/about-us"
+          },
+          {
+            "label": "Our Commitment",
+            "href": "/our-commitment"
+          },
+          {
+            "label": "Contact Us",
+            "href": "/contact-us"
+          }
         ]
       },
       {
         "title": "Customer Care",
         "slug": "footer-customer-care",
         "links": [
-          { "label": "FAQs", "href": "/faqs" },
-          { "label": "Shipping", "href": "/shipping-policy" },
-          { "label": "Returns", "href": "/return-and-refund-policy" },
-          { "label": "Cancellations", "href": "/cancellation-policy" },
-          { "label": "Order Tracking", "href": "/track-your-order" },
-          { "label": "Payments", "href": "/payment-policy" },
-          { "label": "Warranty", "href": "/warranty" },
-          { "label": "Order Help", "href": "/order-help-center" }
+          {
+            "label": "FAQs",
+            "href": "/faqs"
+          },
+          {
+            "label": "Shipping & Delivery",
+            "href": "/shipping-policy"
+          },
+          {
+            "label": "Returns & Refunds",
+            "href": "/return-and-refund-policy"
+          },
+          {
+            "label": "Order Cancellations",
+            "href": "/cancellation-policy"
+          },
+          {
+            "label": "Track Your Order",
+            "href": "/track-your-order"
+          },
+          {
+            "label": "Payment Options",
+            "href": "/payment-policy"
+          },
+          {
+            "label": "Buy Now, Pay Later",
+            "href": "/buy-now-pay-later"
+          },
+          {
+            "label": "Warranty & Support",
+            "href": "/warranty"
+          },
+          {
+            "label": "Order Help",
+            "href": "/order-help-center"
+          }
         ]
       },
       {
         "title": "Legal & Policies",
         "slug": "footer-trust",
         "links": [
-          { "label": "Privacy", "href": "/privacy-policy" },
-          { "label": "Terms", "href": "/terms-of-service" },
-          { "label": "Cookies", "href": "/cookie-policy" },
-          { "label": "Legal Notice", "href": "/legal-notice" },
-          { "label": "Accessibility", "href": "/accessibility-statement" },
-          { "label": "Privacy Choices", "href": "/your-privacy-choices" }
+          {
+            "label": "Privacy",
+            "href": "/privacy-policy"
+          },
+          {
+            "label": "Terms",
+            "href": "/terms-of-service"
+          },
+          {
+            "label": "Cookies",
+            "href": "/cookie-policy"
+          },
+          {
+            "label": "Legal Notice",
+            "href": "/legal-notice"
+          },
+          {
+            "label": "Accessibility",
+            "href": "/accessibility-statement"
+          },
+          {
+            "label": "Privacy Choices",
+            "href": "/your-privacy-choices"
+          }
         ]
       }
     ]
   },
   "footer": {
-    "blurb": "Everyday essentials for a more comfortable home.",
+    "blurb": "Electronics and technology, with clear pricing and support.",
     "trustLine": "",
     "contactTitle": "Customer Support",
     "chatLine": "24/7 Live Chat"
   },
   "seo": {
-    "title": "DROVIIA | Home appliances and everyday essentials",
-    "description": "Shop home appliances, heating and cooling, and personal care at DROVIIA. Operated by Modern Closet Spaces LLC in Gardena, California.",
+    "title": "Plorix | Electronics, components, and gaming gear",
+    "description": "Shop electronics, computer components, gaming equipment, and technology accessories at Plorix. Operated by Plorix Electronics Inc. in Anchorage, Alaska.",
     "keywords": [
-      "DROVIIA",
-      "home appliances",
-      "kitchen appliances",
-      "air conditioners",
-      "personal care"
+      "Plorix",
+      "electronics",
+      "computer components",
+      "gaming",
+      "monitors"
     ],
-    "ogImage": "/brand/droviia-logo-dark.png",
-    "siteUrl": "https://www.droviia.us"
+    "ogImage": "/brand/plorix-logo-dark.png",
+    "siteUrl": "https://plorix.us"
   },
   "theme": {
     "font": "var(--font-figtree)",
@@ -102,24 +184,24 @@
     "defaultMode": "system",
     "motion": "subtle",
     "light": {
-      "primary": "#9DCFB0",
-      "accent": "#3E6B52",
+      "primary": "#0038F8",
+      "accent": "#0038F8",
       "background": "#FFFFFF",
-      "foreground": "#1C2420",
-      "card": "#F4F7F2",
-      "muted": "#E7F0EA",
-      "mutedForeground": "#5C6B62",
-      "border": "rgba(28, 36, 32, 0.12)"
+      "foreground": "#0B1020",
+      "card": "#F3F5FA",
+      "muted": "#E7EBF3",
+      "mutedForeground": "#5A6476",
+      "border": "rgba(11, 16, 32, 0.12)"
     },
     "dark": {
-      "primary": "#9DCFB0",
-      "accent": "#B7DCC4",
-      "background": "#101613",
-      "foreground": "#F3F7F2",
-      "card": "#1A2420",
-      "muted": "#24302A",
-      "mutedForeground": "#A8B7AE",
-      "border": "rgba(243, 247, 242, 0.12)"
+      "primary": "#0038F8",
+      "accent": "#8EB4FF",
+      "background": "#07090F",
+      "foreground": "#F4F7FF",
+      "card": "#121722",
+      "muted": "#1C2433",
+      "mutedForeground": "#A8B3C7",
+      "border": "rgba(244, 247, 255, 0.12)"
     }
   },
   "productPage": {
@@ -141,7 +223,7 @@
         "reviewer": "Amina K.",
         "rating": 5,
         "title": "Better than the photos",
-        "content": "Packaging was careful and the item looked even better in person. Checkout was quick and tracking updates were clear.",
+        "content": "Packaging was careful and the product looked even better in person. Checkout was quick and tracking updates were clear.",
         "date": "2026-09-18",
         "verified": true,
         "location": "California, USA"
@@ -186,7 +268,7 @@
         "reviewer": "Noah L.",
         "rating": 4,
         "title": "Happy overall",
-        "content": "Happy with the purchase. Quality is good. Delivery took a little longer than I hoped, but the item was worth the wait.",
+        "content": "Happy with the purchase. Quality is good. Delivery took a little longer than I hoped, but the product was worth the wait.",
         "date": "2026-07-14",
         "verified": true,
         "location": "Washington, USA"
@@ -204,7 +286,7 @@
         "reviewer": "Omar H.",
         "rating": 5,
         "title": "Clean store, fair prices",
-        "content": "Clean store, fair prices, and the item was packed securely. No surprises, which is what I want from an online order.",
+        "content": "Clean store, fair prices, and the product was packed securely. No surprises, which is what I want from an online order.",
         "date": "2026-06-11",
         "verified": true,
         "location": "Georgia, USA"
@@ -231,7 +313,7 @@
         "reviewer": "Lina W.",
         "rating": 3,
         "title": "Fine, not perfect",
-        "content": "The item is fine and does the job. Sizing notes on the page could be a bit clearer, but support helped quickly.",
+        "content": "The product is fine and does the job. The specification notes could be a bit clearer, but support helped quickly.",
         "date": "2026-04-16",
         "verified": true,
         "location": "Massachusetts, USA"

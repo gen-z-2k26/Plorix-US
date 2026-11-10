@@ -213,13 +213,13 @@ export function VerbatimDocument({ lines }: { lines: string[] }) {
 
   return (
     <article>
-      <header className="relative overflow-hidden bg-[#101613] text-white">
+      <header className="dark relative overflow-hidden bg-background text-foreground">
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(157,207,176,0.35),transparent_52%)]"
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(0,56,248,0.35),transparent_52%)]"
         />
         <div className={pageContainer("relative py-14 sm:py-20")}>
-          <p className="text-xs font-semibold tracking-[0.2em] text-[#9DCFB0] uppercase">
+          <p className="text-xs font-semibold tracking-[0.2em] text-accent uppercase">
             {eyebrowFor(title)}
           </p>
           <h1 className="font-display mt-4 max-w-4xl text-balance text-4xl leading-[1.05] text-white sm:text-6xl">

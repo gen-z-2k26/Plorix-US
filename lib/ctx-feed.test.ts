@@ -9,7 +9,7 @@ const item = `<item>
 </item>`;
 
 describe("CTX feed links", () => {
-  it("uses www.droviia.us when the public URL is the WordPress host", () => {
+  it("uses plorix.us when the public URL is the WordPress host", () => {
     assert.equal(
       feedStoreOrigin("https://wp.droviia.us", "https://wp.droviia.us"),
       PUBLIC_STORE_ORIGIN,
@@ -31,14 +31,14 @@ describe("CTX feed links", () => {
   it("rewrites product and home links and leaves images on WordPress", () => {
     const xml = `<channel><link><![CDATA[ https://wp.droviia.us ]]></link>${item}</channel>`;
     const out = rewriteProductLinks(xml, "https://wp.droviia.us", PUBLIC_STORE_ORIGIN);
-    assert.match(out, /<link>https:\/\/www\.droviia\.us\/<\/link>/);
+    assert.match(out, /<link>https:\/\/plorix\.us\/<\/link>/);
     assert.match(
       out,
-      /<link>https:\/\/www\.droviia\.us\/products\/dyson-airblade-v-hand-dryer<\/link>/,
+      /<link>https:\/\/plorix\.us\/products\/dyson-airblade-v-hand-dryer<\/link>/,
     );
     assert.match(
       out,
-      /<g:canonical_link>https:\/\/www\.droviia\.us\/products\/dyson-airblade-v-hand-dryer<\/g:canonical_link>/,
+      /<g:canonical_link>https:\/\/plorix\.us\/products\/dyson-airblade-v-hand-dryer<\/g:canonical_link>/,
     );
     assert.match(out, /wp\.droviia\.us\/wp-content\/uploads/);
     assert.equal(out.includes("/product/"), false);

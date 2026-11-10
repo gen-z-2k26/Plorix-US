@@ -27,7 +27,7 @@ function sectionText(section: CareSection) {
 
 export function DiscoverFaq({
   page,
-  email = "info@droviia.us",
+  email = "info@plorix.us",
 }: {
   page: CarePage;
   email?: string;
