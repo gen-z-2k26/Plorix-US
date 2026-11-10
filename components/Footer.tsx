@@ -16,7 +16,7 @@ export function Footer({ settings }: { settings: StoreSettings }) {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="dark mt-auto bg-[#101613] text-[#F3F7F2]">
+    <footer className="dark mt-auto bg-background text-foreground">
       <div className={pageContainer("py-12 sm:py-16")}>
         <Link href="/" className="inline-flex items-center">
           <BrandLogo heightClass="h-8 sm:h-9" alt={settings.name} />
@@ -34,14 +34,14 @@ export function Footer({ settings }: { settings: StoreSettings }) {
                     {isExternal(link.href) ? (
                       <a
                         href={link.href}
-                        className="transition-colors hover:text-[#9DCFB0] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9DCFB0]"
+                        className="transition-colors hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                       >
                         {link.label}
                       </a>
                     ) : (
                       <Link
                         href={link.href}
-                        className="transition-colors hover:text-[#9DCFB0] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9DCFB0]"
+                        className="transition-colors hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                       >
                         {link.label}
                       </Link>
@@ -61,7 +61,7 @@ export function Footer({ settings }: { settings: StoreSettings }) {
             {settings.contact.email ? (
               <a
                 href={`mailto:${settings.contact.email}`}
-                className="hover:text-[#9DCFB0]"
+                className="hover:text-accent"
               >
                 {settings.contact.email}
               </a>
@@ -70,7 +70,7 @@ export function Footer({ settings }: { settings: StoreSettings }) {
               <span className="px-2 text-white/40">|</span>
             ) : null}
             {settings.contact.phone ? (
-              <a href={`tel:${phoneHref}`} className="hover:text-[#9DCFB0]">
+              <a href={`tel:${phoneHref}`} className="hover:text-accent">
                 {settings.contact.phone}
               </a>
             ) : null}

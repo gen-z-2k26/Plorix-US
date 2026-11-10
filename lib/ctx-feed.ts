@@ -1,4 +1,4 @@
-export const PUBLIC_STORE_ORIGIN = "https://www.droviia.us";
+export const PUBLIC_STORE_ORIGIN = "https://plorix.us";
 
 function originOf(value: string) {
   try {
@@ -14,7 +14,15 @@ export function feedStoreOrigin(wpOrigin: string, configured?: string) {
   if (!site || site === wpOrigin) return PUBLIC_STORE_ORIGIN;
   try {
     const host = new URL(site).hostname.toLowerCase();
-    if (host === "droviia.us" || host === "wp.droviia.us") return PUBLIC_STORE_ORIGIN;
+    if (
+      host === "plorix.us" ||
+      host === "www.plorix.us" ||
+      host === "droviia.us" ||
+      host === "www.droviia.us" ||
+      host === "wp.droviia.us"
+    ) {
+      return PUBLIC_STORE_ORIGIN;
+    }
   } catch {
     return PUBLIC_STORE_ORIGIN;
   }
@@ -35,7 +43,13 @@ export function rewriteProductLinks(xml: string, wpOrigin: string, storeOrigin: 
       } catch {
         return match;
       }
-      if (url.origin !== wpOrigin && url.hostname !== "wp.droviia.us") return match;
+      if (
+        url.origin !== wpOrigin &&
+        url.hostname !== "wp.droviia.us" &&
+        url.hostname !== "wp.plorix.us"
+      ) {
+        return match;
+      }
       if (!url.pathname.startsWith("/product/") && url.pathname !== "/") return match;
       url.protocol = store.protocol;
       url.host = store.host;

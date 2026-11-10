@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { SectionHeader } from "@/components/sections/SectionHeader";
@@ -7,35 +6,23 @@ import { cn } from "@/lib/utils";
 
 const needs = [
   {
-    title: "Kitchen and laundry",
-    text: "Refrigerators, wine fridges, range hoods, and laundry appliances for everyday household needs.",
-    image: "/brand/collection-kitchen.jpg",
-    alt: "Kitchen with a refrigerator, range hood, and stacked laundry",
-    imageClass: "object-[62%_center]",
+    title: "Computers and components",
+    text: "Graphics cards, memory, storage, adapters, and other hardware for building or upgrading a system.",
     tile: "feature" as const,
   },
   {
-    title: "Heating and air",
-    text: "Air conditioners, furnaces, boilers, humidifiers, and space heaters.",
-    image: "/brand/collection-climate.jpg",
-    alt: "Living room with a wall-mounted air conditioner",
-    imageClass: "object-[center_22%]",
+    title: "Gaming and entertainment",
+    text: "Consoles, accessories, and electronics for play and home entertainment.",
     tile: "wide" as const,
   },
   {
-    title: "Hair and personal care",
-    text: "Dryers, straighteners, curling irons, and styling sets.",
-    image: "/brand/collection-care.jpg",
-    alt: "Hair dryer and straightener on a bathroom vanity",
-    imageClass: "object-[center_58%]",
+    title: "Monitors and displays",
+    text: "Screens for a home office, a gaming setup, or a professional workspace.",
     tile: "compact" as const,
   },
   {
-    title: "Home and commercial",
-    text: "Garage door openers and hand dryers for practical spaces.",
-    image: "/brand/collection-home.jpg",
-    alt: "Garage with a sectional door and opener rail",
-    imageClass: "object-[24%_42%]",
+    title: "Electronics and accessories",
+    text: "Chargers, audio, connectivity gear, and 3D printing technology, as inventory allows.",
     tile: "compact" as const,
   },
 ];
@@ -68,7 +55,7 @@ export function NeedsSection() {
       <div className={pageContainer(sectionStackClass)}>
         <SectionHeader
           eyebrow="Collections"
-          title="Shop by what your home needs"
+          title="Shop electronics by what you are building"
           subtitle="Four places to start. The products themselves come from the live catalog."
           titleId="needs-heading"
         />
@@ -78,27 +65,13 @@ export function NeedsSection() {
               key={item.title}
               href="/products"
               className={cn(
-                "group relative isolate flex overflow-hidden rounded-2xl bg-[#101613] text-white",
+                "dark group relative isolate flex overflow-hidden rounded-2xl bg-background text-foreground",
                 tileClass[item.tile],
               )}
             >
-              <Image
-                src={item.image}
-                alt={item.alt}
-                fill
-                sizes={
-                  item.tile === "compact"
-                    ? "(min-width: 1024px) 22vw, (min-width: 640px) 50vw, 100vw"
-                    : "(min-width: 1024px) 46vw, 100vw"
-                }
-                className={cn(
-                  "object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]",
-                  item.imageClass,
-                )}
-              />
               <div
                 aria-hidden
-                className="absolute inset-0 bg-gradient-to-t from-[#101613]/92 via-[#101613]/45 to-[#101613]/10"
+                className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(0,56,248,0.45),transparent_55%)]"
               />
               <div
                 className={cn(
@@ -110,7 +83,7 @@ export function NeedsSection() {
                   {item.title}
                 </h3>
                 <p className={copyClass[item.tile]}>{item.text}</p>
-                <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-[#9DCFB0]">
+                <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-accent">
                   Shop collection
                   <ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-0.5" />
                 </span>

@@ -8,13 +8,13 @@ import { cn } from "@/lib/utils";
 const items: TrustItem[] = [
   {
     icon: "truck",
-    title: "Shipping from $5",
-    text: "Standard shipping is $5 under $100 and free at $100 or more. Large appliances may include freight charges shown at checkout. Estimated parcel delivery is 3-6 business days.",
+    title: "Shipping at checkout",
+    text: "Shipping charges, when they apply, are calculated and shown before you submit an order.",
   },
   {
     icon: "refresh",
     title: "30-day returns",
-    text: "Eligible products can be requested for return within 30 days. Conditions, customer-paid return shipping, and a $5 restocking fee may apply.",
+    text: "Eligible products can be requested for return within 30 days. Approved returns have a $0 restocking fee and free return shipping.",
   },
   {
     icon: "shield",

@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 export function BrandLogo({
   className,
   heightClass = "h-8",
-  alt = "DROVIIA",
+  alt = "Plorix",
 }: {
   className?: string;
   heightClass?: string;
@@ -15,13 +15,13 @@ export function BrandLogo({
     <span className={cn("inline-flex items-center", className)}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="/brand/droviia-logo-dark.png"
+        src="/brand/plorix-logo-dark.png"
         alt={alt}
         className={cn(imageClass, "dark:hidden")}
       />
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="/brand/droviia-logo-white.png"
+        src="/brand/plorix-logo-white.png"
         alt=""
         className={cn(imageClass, "hidden dark:block")}
       />

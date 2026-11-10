@@ -46,7 +46,7 @@ function afterpayAddress(address: Address) {
 
 async function userAgent(merchantId?: string) {
   const id = merchantId || (await afterpayAccount()).merchantId || "unknown";
-  const site = process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://droviia.us";
+  const site = process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://plorix.us";
   return `EcomBuilder/1.0.0 (Next.js/16; Merchant/${id}) ${site}`;
 }
 

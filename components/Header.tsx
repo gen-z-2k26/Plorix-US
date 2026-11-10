@@ -41,7 +41,7 @@ function HeaderReviewsLink({
     <Link
       href="/reviews"
       onClick={onNavigate}
-      aria-label={`${score} out of 5 from ${total} Droviia reviews across the United States. Read all reviews`}
+      aria-label={`${score} out of 5 from ${total} Plorix reviews across the United States. Read all reviews`}
       className={cn(
         "inline-flex items-center gap-1.5 rounded-lg px-2.5 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted/70 hover:text-foreground",
         className,
