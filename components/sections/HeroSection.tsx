@@ -2,18 +2,22 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import type { StoreSettings } from "@/lib/types";
+import { StoreImage } from "@/components/StoreImage";
 import { buttonVariants } from "@/components/ui/button";
 import { pageContainer } from "@/lib/layout";
 import { cn } from "@/lib/utils";
 
-const collections = [
-  { label: "Computers and components", href: "/products" },
-  { label: "Gaming and entertainment", href: "/products" },
-  { label: "Monitors and displays", href: "/products" },
-  { label: "Electronics and accessories", href: "/products" },
-];
-
-export function HeroSection({ settings }: { settings: StoreSettings }) {
+export function HeroSection({
+  settings,
+  image,
+  imageAlt,
+  collections,
+}: {
+  settings: StoreSettings;
+  image?: string;
+  imageAlt?: string;
+  collections: { label: string; href: string }[];
+}) {
   const headline = settings.hero?.headline || settings.name;
   const support = settings.hero?.support || settings.tagline;
 
@@ -22,14 +26,24 @@ export function HeroSection({ settings }: { settings: StoreSettings }) {
       aria-labelledby="hero-heading"
       className="dark relative isolate h-[calc(100svh-3.5rem)] overflow-hidden bg-background text-foreground sm:h-[calc(100svh-4rem)]"
     >
-      <Image
-        src="/brand/footer-image.jpg"
-        alt=""
-        fill
-        priority
-        sizes="100vw"
-        className="object-contain object-right"
-      />
+      {image ? (
+        <StoreImage
+          src={image}
+          alt={imageAlt || ""}
+          priority
+          sizes="100vw"
+          className="object-cover object-center"
+        />
+      ) : (
+        <Image
+          src="/brand/footer-image.jpg"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-contain object-right"
+        />
+      )}
       <div
         aria-hidden
         className="absolute inset-0 bg-gradient-to-r from-background via-background/88 to-background/25"
