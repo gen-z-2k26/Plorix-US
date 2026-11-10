@@ -11,7 +11,7 @@ import { toCardProduct } from "@/lib/catalog-card";
 import { sceneForCategory } from "@/lib/landing-photos";
 import { defaultPages } from "@/lib/types";
 
-export const revalidate = 60;
+export const revalidate = 300;
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSiteSettings();

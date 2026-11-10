@@ -1,7 +1,7 @@
 import { revalidatePath, revalidateTag, updateTag } from "next/cache";
 
 /** Home, shop, product, and collection pages. Stock and price stay inside this window. */
-export const STOCK_REVALIDATE_SECONDS = 60;
+export const STOCK_REVALIDATE_SECONDS = 5 * 60;
 
 /** About, policies, reviews, and other pages that do not show inventory. */
 export const CONTENT_REVALIDATE_SECONDS = 60 * 60;

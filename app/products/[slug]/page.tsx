@@ -16,7 +16,7 @@ import { toCardProduct } from "@/lib/catalog-card";
 import { isCatalogSlug } from "@/lib/catalog-slug";
 import type { ProductPaymentDisplay, BnplPublicConfig } from "@/lib/types";
 
-export const revalidate = 60;
+export const revalidate = 300;
 
 export async function generateStaticParams() {
   try {
