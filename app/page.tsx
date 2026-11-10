@@ -45,7 +45,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function HomePage() {
   const settings = await getSiteSettings();
-  const categories = await getHomeCategories(3);
+  const categories = await getHomeCategories(4);
   const groups = await Promise.all(
     categories.map(async (category) => {
       const products = (await getProductsByCategory(category.slug)).slice(0, 3);
@@ -84,6 +84,16 @@ export default async function HomePage() {
           ...group,
           products: group.products.map(toCardProduct),
         }))}
+        tiles={groups.slice(0, 4).map((group) => {
+          const sample = group.products[0];
+          return {
+            title: group.category.name,
+            text: sample?.name || group.category.description || "Shop this category",
+            href: `/collection/${group.category.slug}`,
+            image: sample?.images[0] || group.category.image || "",
+            alt: sample?.imageAlts[0] || sample?.name || group.category.name,
+          };
+        })}
       />
     </>
   );

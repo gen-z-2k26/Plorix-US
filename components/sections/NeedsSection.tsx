@@ -1,31 +1,19 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { StoreImage } from "@/components/StoreImage";
 import { SectionHeader } from "@/components/sections/SectionHeader";
 import { pageContainer, sectionStackClass, sectionYClass } from "@/lib/layout";
 import { cn } from "@/lib/utils";
 
-const needs = [
-  {
-    title: "Computers and components",
-    text: "Graphics cards, memory, storage, adapters, and other hardware for building or upgrading a system.",
-    tile: "feature" as const,
-  },
-  {
-    title: "Gaming and entertainment",
-    text: "Consoles, accessories, and electronics for play and home entertainment.",
-    tile: "wide" as const,
-  },
-  {
-    title: "Monitors and displays",
-    text: "Screens for a home office, a gaming setup, or a professional workspace.",
-    tile: "compact" as const,
-  },
-  {
-    title: "Electronics and accessories",
-    text: "Chargers, audio, connectivity gear, and 3D printing technology, as inventory allows.",
-    tile: "compact" as const,
-  },
-];
+export type CatalogTile = {
+  title: string;
+  text: string;
+  href: string;
+  image: string;
+  alt: string;
+};
+
+const tileSizes = ["feature", "wide", "compact", "compact"] as const;
 
 const tileClass = {
   feature: "min-h-[28rem] sm:col-span-2 lg:col-span-2 lg:row-span-2 lg:min-h-0",
@@ -45,7 +33,12 @@ const copyClass = {
   compact: "mt-2 line-clamp-2 text-sm leading-snug text-white/80",
 };
 
-export function NeedsSection() {
+export function NeedsSection({ tiles }: { tiles: CatalogTile[] }) {
+  const needs = tiles.slice(0, 4).map((tile, index) => ({
+    ...tile,
+    tile: tileSizes[index] ?? "compact",
+  }));
+  if (!needs.length) return null;
   return (
     <section
       id="categories"
@@ -56,22 +49,34 @@ export function NeedsSection() {
         <SectionHeader
           eyebrow="Collections"
           title="Shop electronics by what you are building"
-          subtitle="Four places to start. The products themselves come from the live catalog."
+          subtitle="Categories and photos from the live catalog."
           titleId="needs-heading"
         />
         <div className="grid gap-4 sm:grid-cols-2 lg:h-[42rem] lg:grid-cols-4 lg:grid-rows-2">
           {needs.map((item) => (
             <Link
               key={item.title}
-              href="/products"
+              href={item.href}
               className={cn(
                 "dark group relative isolate flex overflow-hidden rounded-2xl bg-background text-foreground",
                 tileClass[item.tile],
               )}
             >
+              {item.image ? (
+                <StoreImage
+                  src={item.image}
+                  alt={item.alt}
+                  sizes={
+                    item.tile === "compact"
+                      ? "(min-width: 1024px) 22vw, (min-width: 640px) 50vw, 100vw"
+                      : "(min-width: 1024px) 46vw, 100vw"
+                  }
+                  className="transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+                />
+              ) : null}
               <div
                 aria-hidden
-                className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(0,56,248,0.45),transparent_55%)]"
+                className="absolute inset-0 bg-gradient-to-t from-background/92 via-background/45 to-background/10"
               />
               <div
                 className={cn(
