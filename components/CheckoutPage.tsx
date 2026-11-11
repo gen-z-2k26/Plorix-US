@@ -271,7 +271,8 @@ export function CheckoutPage() {
     const region = regionError(
       shipping.country,
       shipping.state,
-      selectedCountry?.states ?? [],
+      countries.find((country) => country.code === normalizeCountryCode(shipping.country))
+        ?.states ?? [],
     );
     if (region) next.state = region;
     const email = (same ? shipping.email : billing.email).trim();
