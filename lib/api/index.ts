@@ -4,6 +4,7 @@ import site from "@/data/site.json";
 import pageContent from "@/data/pages.json";
 import { CATALOG_TAG, CONTENT_REVALIDATE_SECONDS, STOCK_REVALIDATE_SECONDS } from "@/lib/cache-policy";
 import { isCatalogSlug } from "@/lib/catalog-slug";
+import { normalizeCountryCode } from "@/lib/checkout-address";
 import {
   getWooOrigin,
   isWooConfigured,
@@ -577,7 +578,7 @@ export async function getCountries(): Promise<CountryOption[]> {
       return data
         .filter((row) => row.code && row.name)
         .map((row) => ({
-          code: String(row.code),
+          code: normalizeCountryCode(String(row.code)),
           name: String(row.name),
           states: (row.states ?? [])
             .filter((state) => state.code && state.name)

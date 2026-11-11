@@ -1,4 +1,5 @@
 import { plainStoreMessage } from "@/lib/cart-result";
+import { wooAddressFields } from "@/lib/checkout-address";
 import { fromStoreAmount } from "@/lib/money";
 import type {
   Address,
@@ -121,6 +122,7 @@ export function mapAddress(raw?: RawAddress): Address {
 }
 
 export function toWooAddress(address: Address, includeEmail: boolean) {
+  const region = wooAddressFields(address);
   return {
     first_name: address.firstName,
     last_name: address.lastName,
@@ -128,9 +130,9 @@ export function toWooAddress(address: Address, includeEmail: boolean) {
     address_1: address.address1,
     address_2: address.address2,
     city: address.city,
-    state: address.state,
-    postcode: address.postcode,
-    country: address.country,
+    state: region.state,
+    postcode: region.postcode,
+    country: region.country,
     phone: address.phone,
     ...(includeEmail ? { email: address.email } : {}),
   };

@@ -1,10 +1,5 @@
 import type { Address } from "@/lib/types";
-
-const COUNTRY_ALIASES: Record<string, string> = {
-  USA: "US",
-  "UNITED STATES": "US",
-  "UNITED STATES OF AMERICA": "US",
-};
+import { normalizeCountryCode } from "@/lib/checkout-address";
 
 export function stripePersonName(address: Address) {
   return `${address.firstName} ${address.lastName}`.trim();
@@ -31,8 +26,7 @@ export function parseStripeShippingRateId(id: string) {
 }
 
 function stripeCountry(value: string) {
-  const raw = value.trim().toUpperCase();
-  if (COUNTRY_ALIASES[raw]) return COUNTRY_ALIASES[raw];
+  const raw = normalizeCountryCode(value);
   if (raw.length === 2) return raw;
   return raw.slice(0, 2);
 }
