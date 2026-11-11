@@ -10,8 +10,15 @@ import {
   getOrder,
   markOrderPaid,
   setOrderCustomerNote,
+  setOrderMeta,
 } from "@/lib/api";
 import { captureAffirmCheckout } from "@/lib/affirm";
+import {
+  createReignSession,
+  getReignSession,
+  REIGN_SESSION_META,
+  reignSessionPaidAmountMatches,
+} from "@/lib/reign";
 import { captureAfterpayPayment, createAfterpayCheckout } from "@/lib/afterpay";
 import { capturePayPalOrder, createPayPalOrder } from "@/lib/paypal";
 import { checkoutPublicConfig, getPaymentAccounts } from "@/lib/payment-config";
@@ -56,9 +63,13 @@ type CheckoutOptions = {
   paypalClientId: string;
   affirmPublicKey: string;
   affirmEnv: "sandbox" | "live";
+  reignPublishableKey: string;
+  reignScriptSrc: string;
+  reignScriptIntegrity: string;
 };
 
 function providerFromRef(ref: string): CheckoutPaymentKind | null {
+  if (ref.startsWith("reign:")) return "reign";
   if (ref.startsWith("paypal:")) return "paypal";
   if (ref.startsWith("affirm:")) return "affirm";
   if (ref.startsWith("afterpay:")) return "afterpay";
@@ -87,11 +98,17 @@ async function loadCheckoutOptions(): Promise<CheckoutOptions> {
     countries,
     defaultCountry,
     mockPayment: isMockPaymentEnabled(),
-    paymentMethods,
+    paymentMethods:
+      cart.totals.currency.toUpperCase() === "USD"
+        ? paymentMethods
+        : paymentMethods.filter((method) => method.kind !== "reign"),
     stripePublishableKey: publicConfig.stripePublishableKey,
     paypalClientId: publicConfig.paypalClientId,
     affirmPublicKey: publicConfig.affirmPublicKey,
     affirmEnv: publicConfig.affirmEnv,
+    reignPublishableKey: publicConfig.reignPublishableKey,
+    reignScriptSrc: publicConfig.reignScriptSrc,
+    reignScriptIntegrity: publicConfig.reignScriptIntegrity,
   };
 }
 
@@ -392,6 +409,37 @@ async function beginProviderPayment(input: {
     return { ...base, clientSecret: paypalOrderId };
   }
 
+  if (input.kind === "reign") {
+    const previous = input.existingRef?.startsWith("reign:")
+      ? input.existingRef.slice("reign:".length)
+      : "";
+    if (previous) {
+      const earlier = await getReignSession(previous).catch(() => null);
+      if (earlier?.status === "succeeded" || earlier?.status === "processing") {
+        throw new Error(
+          "A payment for this order is already being confirmed. Refresh the page in a moment.",
+        );
+      }
+    }
+    const session = await createReignSession({
+      orderId: input.orderId,
+      amount: input.amount,
+      currency: input.currency,
+      email: input.email,
+      shipping: input.shipping,
+      billing: input.billing,
+      needsShipping: input.cart.needsShipping,
+    });
+    await setOrderMeta(input.orderId, REIGN_SESSION_META, session.id);
+    await setPendingCheckout({
+      orderId: input.orderId,
+      orderKey: input.orderKey,
+      paymentIntentId: `reign:${session.id}`,
+      cartHash: input.cart.cartHash,
+    });
+    return { ...base, clientSecret: session.clientSecret, reignSessionId: session.id };
+  }
+
   if (input.kind === "affirm") {
     await setPendingCheckout({
       orderId: input.orderId,
@@ -559,6 +607,32 @@ async function completeCheckout(
       throw new Error("Payment amount does not match the order.");
     }
     return finishPaid(orderId, orderKey, captured.chargeId, "affirm");
+  }
+
+  if (provider === "reign") {
+    const pending = await getPendingCheckout();
+    if (
+      !pending ||
+      pending.orderId !== orderId ||
+      pending.paymentIntentId !== `reign:${paymentIntentId}`
+    ) {
+      throw new Error("Payment confirmation is incomplete.");
+    }
+    if (orderKey && pending.orderKey && pending.orderKey !== orderKey) {
+      throw new Error("Payment does not match this order.");
+    }
+    const session = await getReignSession(paymentIntentId);
+    if (session.status === "processing" || session.status === "requires_action") {
+      throw new Error("We are still confirming your payment. Please wait.");
+    }
+    if (session.status !== "succeeded") {
+      throw new Error("Payment has not succeeded yet.");
+    }
+    const order = await getOrder(orderId);
+    if (!reignSessionPaidAmountMatches(session, order.total || 0)) {
+      throw new Error("Payment amount does not match the order.");
+    }
+    return finishPaid(orderId, orderKey, session.id, "reign");
   }
 
   if (provider === "afterpay") {

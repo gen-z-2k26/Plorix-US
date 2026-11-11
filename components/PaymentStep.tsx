@@ -103,6 +103,28 @@ function MockPaymentForm({
 }
 
 
+const paypalScripts = new Map<string, Promise<void>>();
+
+function loadPayPal(clientId: string, currency: string) {
+  const src = `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(clientId)}&currency=${encodeURIComponent(currency)}&intent=capture`;
+  const loaded = paypalScripts.get(src);
+  if (loaded) return loaded;
+  const task = new Promise<void>((resolve, reject) => {
+    const script = document.createElement("script");
+    script.src = src;
+    script.async = true;
+    script.onload = () => resolve();
+    script.onerror = () => {
+      paypalScripts.delete(src);
+      script.remove();
+      reject(new Error("PayPal could not be loaded."));
+    };
+    document.body.appendChild(script);
+  });
+  paypalScripts.set(src, task);
+  return task;
+}
+
 export function PayPalPayment({
   amount,
   currency,
@@ -152,6 +174,7 @@ export function PayPalPayment({
   useEffect(() => {
     if (!clientId || !slot.current) return;
     let cancelled = false;
+    let buttons: { close?: () => Promise<void> } | null = null;
 
     function render() {
       const paypal = (
@@ -166,13 +189,17 @@ export function PayPalPayment({
                 data: unknown,
                 actions: { resolve: () => void; reject: () => void },
               ) => void;
-            }) => { render: (target: HTMLElement) => Promise<void> };
+            }) => {
+              render: (target: HTMLElement) => Promise<void>;
+              close?: () => Promise<void>;
+            };
           };
         }
       ).paypal;
       if (!paypal || !slot.current || cancelled) return;
-      slot.current.replaceChildren();
-      void paypal
+      const target = document.createElement("div");
+      slot.current.replaceChildren(target);
+      const instance = paypal
         .Buttons({
           onClick: (_data, actions) => {
             if (canStartRef.current && !canStartRef.current()) {
@@ -218,32 +245,23 @@ export function PayPalPayment({
           onError: (error) => {
             onErrorRef.current(error.message || "PayPal could not be completed.");
           },
-        })
-        .render(slot.current);
+        });
+      buttons = instance;
+      instance.render(target).catch(() => {
+        // Unmounted before PayPal finished drawing; the next mount renders again.
+      });
     }
 
-    if (
-      (
-        window as Window & {
-          paypal?: unknown;
-        }
-      ).paypal
-    ) {
-      render();
-      return;
-    }
-
-    const script = document.createElement("script");
-    script.src = `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(clientId)}&currency=${encodeURIComponent(currency)}&intent=capture`;
-    script.async = true;
-    script.onload = () => {
-      if (!cancelled) render();
-    };
-    document.body.appendChild(script);
-    const node = slot.current;
+    loadPayPal(clientId, currency)
+      .then(() => {
+        if (!cancelled) render();
+      })
+      .catch((error: unknown) => {
+        if (!cancelled) onErrorRef.current(userErrorMessage(error, "PayPal could not be loaded."));
+      });
     return () => {
       cancelled = true;
-      node?.replaceChildren();
+      void buttons?.close?.().catch(() => undefined);
     };
   }, [clientId, clientSecret, currency, orderId, orderKey]);
 
@@ -262,6 +280,273 @@ export function PayPalPayment({
       />
       <SecureNote>
         You will approve this payment in PayPal. We only receive the result.
+      </SecureNote>
+    </div>
+  );
+}
+
+type ReignCard = {
+  ready: boolean;
+  on: (event: "ready" | "error", handler: (error?: { message?: string }) => void) => void;
+  destroy: () => void;
+};
+
+type ReignConfirmResult =
+  | { status: "succeeded" | "processing" }
+  | { status: "requires_payment_method"; error: { message: string; retry?: string } };
+
+type ReignClient = {
+  card: (options: {
+    paymentSessionId: string;
+    clientSecret: string;
+    number: string;
+    expiry: string;
+    cvc: string;
+  }) => ReignCard;
+  confirmPayment: (options: {
+    paymentSessionId: string;
+    clientSecret: string;
+    card: ReignCard;
+    billingDetails: { name: string };
+  }) => Promise<ReignConfirmResult>;
+};
+
+type ReignWindow = Window & {
+  ReignPayments?: (options: { publishableKey: string }) => ReignClient;
+};
+
+let reignScript: Promise<void> | null = null;
+
+function loadReign(src: string, integrity: string) {
+  if ((window as ReignWindow).ReignPayments) return Promise.resolve();
+  if (reignScript) return reignScript;
+  reignScript = new Promise<void>((resolve, reject) => {
+    const script = document.createElement("script");
+    script.src = src;
+    script.integrity = integrity;
+    script.crossOrigin = "anonymous";
+    script.async = true;
+    script.onload = () => resolve();
+    script.onerror = () => {
+      reignScript = null;
+      script.remove();
+      reject(new Error("Card payment could not be loaded."));
+    };
+    document.head.appendChild(script);
+  });
+  return reignScript;
+}
+
+const REIGN_POLL_MS = 3000;
+const REIGN_POLL_TRIES = 20;
+
+type ReignSessionStart = {
+  orderId: string;
+  orderKey: string;
+  sessionId: string;
+  clientSecret: string;
+  amount: number;
+  currency: string;
+};
+
+export function ReignPayment({
+  amount,
+  currency,
+  publishableKey,
+  scriptSrc,
+  scriptIntegrity,
+  cardholderName,
+  prepare,
+  onPaid,
+  onError,
+}: Pick<PaymentStepProps, "amount" | "currency" | "onPaid" | "onError"> & {
+  publishableKey: string;
+  scriptSrc: string;
+  scriptIntegrity: string;
+  cardholderName: string;
+  prepare: () => Promise<ReignSessionStart | null>;
+}) {
+  const { settings } = useStore();
+  const [started, setSession] = useState<ReignSessionStart | null>(null);
+  const [starting, setStarting] = useState(false);
+  const [readyId, setReadyId] = useState("");
+  const [paying, setPaying] = useState(false);
+  const [notice, setNotice] = useState("");
+  const [name, setName] = useState(cardholderName);
+  const clientRef = useRef<ReignClient | null>(null);
+  const cardRef = useRef<ReignCard | null>(null);
+  const onErrorRef = useRef(onError);
+  useEffect(() => {
+    onErrorRef.current = onError;
+  }, [onError]);
+
+  const configured = Boolean(publishableKey && scriptSrc && scriptIntegrity);
+  const session =
+    started &&
+    Math.abs(started.amount - amount) < 0.005 &&
+    started.currency.toUpperCase() === currency.toUpperCase()
+      ? started
+      : null;
+  const ready = Boolean(session && readyId === session.sessionId);
+
+  useEffect(() => {
+    if (!session) return;
+    let cancelled = false;
+    loadReign(scriptSrc, scriptIntegrity)
+      .then(() => {
+        if (cancelled) return;
+        const factory = (window as ReignWindow).ReignPayments;
+        if (!factory) throw new Error("Card payment could not be loaded.");
+        const client = factory({ publishableKey });
+        const card = client.card({
+          paymentSessionId: session.sessionId,
+          clientSecret: session.clientSecret,
+          number: "#reign-card-number",
+          expiry: "#reign-card-expiry",
+          cvc: "#reign-card-cvc",
+        });
+        card.on("ready", () => {
+          if (!cancelled) setReadyId(session.sessionId);
+        });
+        card.on("error", (error) => {
+          if (!cancelled) onErrorRef.current(error?.message || "Card fields did not load.");
+        });
+        clientRef.current = client;
+        cardRef.current = card;
+      })
+      .catch((error: unknown) => {
+        if (!cancelled) onErrorRef.current(userErrorMessage(error, "Card payment could not be loaded."));
+      });
+    return () => {
+      cancelled = true;
+      cardRef.current?.destroy();
+      cardRef.current = null;
+      clientRef.current = null;
+    };
+  }, [session, publishableKey, scriptSrc, scriptIntegrity]);
+
+  async function start() {
+    setStarting(true);
+    setNotice("");
+    try {
+      const next = await prepare();
+      if (next) setSession(next);
+    } finally {
+      setStarting(false);
+    }
+  }
+
+  async function confirmOnServer(current: ReignSessionStart) {
+    for (let attempt = 0; attempt < REIGN_POLL_TRIES; attempt += 1) {
+      const result = await completeCheckoutAction({
+        orderId: current.orderId,
+        orderKey: current.orderKey,
+        paymentIntentId: current.sessionId,
+        provider: "reign",
+      });
+      if (result.ok) return result.data;
+      if (!/still confirming/i.test(result.message)) throw new Error(result.message);
+      setNotice("We are confirming your payment.");
+      await new Promise((resolve) => setTimeout(resolve, REIGN_POLL_MS));
+    }
+    throw new Error(
+      "Your payment is still being confirmed. We will email you once it goes through.",
+    );
+  }
+
+  async function pay() {
+    const client = clientRef.current;
+    const card = cardRef.current;
+    if (!session || !client || !card) return;
+    if (!name.trim()) {
+      onError("Enter the name on the card.");
+      return;
+    }
+    setPaying(true);
+    setNotice("");
+    try {
+      const result = await client.confirmPayment({
+        paymentSessionId: session.sessionId,
+        clientSecret: session.clientSecret,
+        card,
+        billingDetails: { name: name.trim() },
+      });
+      if (result.status === "requires_payment_method") {
+        onError(result.error.message || "Your card was declined.");
+        if (result.error.retry === "none") setSession(null);
+        return;
+      }
+      onPaid(await confirmOnServer(session));
+    } catch (error) {
+      onError(userErrorMessage(error, "Card payment could not be completed."));
+    } finally {
+      setPaying(false);
+    }
+  }
+
+  if (!configured) {
+    return <Unavailable>Card payment is not available right now.</Unavailable>;
+  }
+
+  const frame =
+    "min-h-11 rounded-md border border-border bg-background px-3.5 py-2.5";
+
+  return (
+    <div className="space-y-4">
+      {session ? (
+        <div className="space-y-3">
+          <div className="space-y-1.5">
+            <span id="reign-number-label" className="text-sm font-medium">Card number</span>
+            <div id="reign-card-number" className={frame} />
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <span id="reign-expiry-label" className="text-sm font-medium">Expiration date</span>
+              <div id="reign-card-expiry" className={frame} />
+            </div>
+            <div className="space-y-1.5">
+              <span id="reign-cvc-label" className="text-sm font-medium">Security code</span>
+              <div id="reign-card-cvc" className={frame} />
+            </div>
+          </div>
+          <label className="block space-y-1.5" htmlFor="reign-card-name">
+            <span className="text-sm font-medium">Name on card</span>
+            <input
+              id="reign-card-name"
+              autoComplete="cc-name"
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+              className="h-11 w-full rounded-md border border-border bg-background px-3.5 text-sm outline-none focus-visible:border-accent"
+            />
+          </label>
+          {notice ? (
+            <p className="text-sm text-muted-foreground" role="status">{notice}</p>
+          ) : null}
+          <Button
+            type="button"
+            size="lg"
+            className="h-12 w-full rounded-md bg-accent text-sm font-medium text-accent-foreground hover:bg-accent/90"
+            disabled={!ready || paying}
+            aria-busy={paying}
+            onClick={() => void pay()}
+          >
+            {paying ? "Processing..." : `Pay ${formatPrice(amount, settings, currency)}`}
+          </Button>
+        </div>
+      ) : (
+        <Button
+          type="button"
+          size="lg"
+          className="h-12 w-full rounded-md bg-accent text-sm font-medium text-accent-foreground hover:bg-accent/90"
+          disabled={starting}
+          aria-busy={starting}
+          onClick={() => void start()}
+        >
+          {starting ? "Preparing..." : "Continue to card details"}
+        </Button>
+      )}
+      <SecureNote>
+        Card details go straight to our payment processor. This store never sees them.
       </SecureNote>
     </div>
   );

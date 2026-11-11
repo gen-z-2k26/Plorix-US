@@ -9,6 +9,7 @@ export const PUBLIC_METHODS: ReadonlyArray<{
 }> = [
   { kind: "paypal", title: "PayPal" },
   { kind: "stripe", title: "Card" },
+  { kind: "reign", title: "Card" },
   { kind: "affirm", title: "Affirm" },
   { kind: "afterpay", title: "Afterpay" },
 ];

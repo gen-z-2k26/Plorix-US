@@ -3999,11 +3999,6 @@ snapshots:
 
   '@unrs/resolver-binding-wasm32-wasi@1.12.2':
     dependencies:
-  '@wp-chatbot/nextjs@file:vendor/wp-chatbot-nextjs-0.1.0.tgz(next@16.3.8(@babel/core@7.29.7)(@types/node@20.19.43)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)':
-    dependencies:
-      next: 16.3.8(@babel/core@7.29.7)(@types/node@20.19.43)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
-      react: 19.2.8
-
       '@emnapi/core': 1.10.0
       '@emnapi/runtime': 1.10.0
       '@napi-rs/wasm-runtime': 1.2.5(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)
@@ -4041,6 +4036,11 @@ snapshots:
       '@vercel/cli-config': 0.3.1
       '@vercel/cli-exec': 1.0.1
       jose: 5.10.0
+
+  '@wp-chatbot/nextjs@file:vendor/wp-chatbot-nextjs-0.1.0.tgz(next@16.3.8(@babel/core@7.29.7)(@types/node@20.19.43)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)':
+    dependencies:
+      next: 16.3.8(@babel/core@7.29.7)(@types/node@20.19.43)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react: 19.2.8
 
   accepts@2.0.0:
     dependencies:

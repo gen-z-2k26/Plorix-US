@@ -28,6 +28,8 @@ const CARD_DEFAULT: PaymentIconSlug[] = [
   "unionpay",
 ];
 
+const REIGN_BRANDS: PaymentIconSlug[] = ["visa", "mastercard", "amex", "discover"];
+
 export function iconsForCheckoutMethods(
   methods: CheckoutPaymentMethod[],
   cardBrands: PaymentIconSlug[] = CARD_DEFAULT,
@@ -46,6 +48,8 @@ export function iconsForCheckoutMethods(
       for (const brand of cardBrands.length ? cardBrands : CARD_DEFAULT) {
         add(brand);
       }
+    } else if (method.kind === "reign") {
+      for (const brand of REIGN_BRANDS) add(brand);
     } else if (method.kind === "paypal") {
       add("paypal");
     } else if (method.kind === "affirm") {

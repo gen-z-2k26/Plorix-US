@@ -8,6 +8,7 @@ describe("public payment methods", () => {
     assert.deepEqual(list, [
       { kind: "paypal", title: "PayPal", enabled: false },
       { kind: "stripe", title: "Card", enabled: true },
+      { kind: "reign", title: "Card", enabled: false },
       { kind: "affirm", title: "Affirm", enabled: false },
       { kind: "afterpay", title: "Afterpay", enabled: true },
     ]);
