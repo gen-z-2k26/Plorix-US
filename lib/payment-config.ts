@@ -385,8 +385,14 @@ export async function getPaymentAccounts(options?: {
   return { ...stored, managed: true };
 }
 
-export async function getAdminPaymentView(): Promise<AdminPaymentView> {
-  const accounts = await getPaymentAccounts({ fresh: true });
+/**
+ * Pass `fresh: false` right after a save: Blob can still serve the previous
+ * version for a moment, while memory already holds what was just written.
+ */
+export async function getAdminPaymentView(options?: {
+  fresh?: boolean;
+}): Promise<AdminPaymentView> {
+  const accounts = await getPaymentAccounts({ fresh: options?.fresh ?? true });
   const stripeReady = Boolean(accounts.stripe.publishableKey && accounts.stripe.secretKey);
   const paypalReady = Boolean(accounts.paypal.clientId && accounts.paypal.clientSecret);
   const affirmReady = Boolean(accounts.affirm.publicKey && accounts.affirm.privateKey);

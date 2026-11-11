@@ -90,7 +90,7 @@ export async function savePaymentSettingsAction(
         console.error("Stripe wallet domains could not be checked", error);
       }
     }
-    return { ok: true, data: await getAdminPaymentView() };
+    return { ok: true, data: await getAdminPaymentView({ fresh: false }) };
   } catch (error) {
     unstable_rethrow(error);
     return publicError(error, "Could not save.");
@@ -103,7 +103,7 @@ export async function clearProviderAction(
   try {
     await requireAdmin();
     await clearProviderSecrets(provider);
-    return { ok: true, data: await getAdminPaymentView() };
+    return { ok: true, data: await getAdminPaymentView({ fresh: false }) };
   } catch (error) {
     unstable_rethrow(error);
     return publicError(error, "Could not clear credentials.");
