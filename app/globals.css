@@ -120,6 +120,16 @@
   --elevation-lg: 0 24px 48px rgba(0, 0, 0, 0.55);
 }
 
+select,
+select option {
+  color-scheme: light;
+}
+
+select option {
+  background-color: #ffffff;
+  color: #111111;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
