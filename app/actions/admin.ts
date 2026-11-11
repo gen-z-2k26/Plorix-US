@@ -13,6 +13,7 @@ import {
   requireAdmin,
 } from "@/lib/admin-session";
 import { pingPayPal } from "@/lib/paypal";
+import { pingReign } from "@/lib/reign";
 import {
   clearProviderSecrets,
   getAdminPaymentView,
@@ -114,6 +115,7 @@ export type PaymentConnectionDraft = {
   paypal?: { mode?: PaymentMode; clientId?: string; clientSecret?: string };
   affirm?: { mode?: PaymentMode; publicKey?: string; privateKey?: string };
   afterpay?: { mode?: PaymentMode; merchantId?: string; secret?: string };
+  reign?: { secretKey?: string };
 };
 
 export async function testProviderAction(
@@ -140,6 +142,8 @@ export async function testProviderAction(
       await pingPayPal(draft?.paypal);
     } else if (provider === "affirm") {
       await pingAffirm(draft?.affirm);
+    } else if (provider === "reign") {
+      await pingReign(draft?.reign?.secretKey);
     } else {
       await pingAfterpay(draft?.afterpay);
     }

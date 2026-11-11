@@ -111,7 +111,7 @@ export interface ProductPaymentDisplay {
   afterpayEnabled: boolean;
 }
 
-export type CheckoutPaymentKind = "stripe" | "paypal" | "affirm" | "afterpay";
+export type CheckoutPaymentKind = "stripe" | "paypal" | "affirm" | "afterpay" | "reign";
 
 export interface CheckoutPaymentMethod {
   kind: CheckoutPaymentKind;
@@ -501,13 +501,15 @@ export interface CheckoutSessionResult {
   redirectUrl?: string;
   /** Publishable key from the same account that created this payment. */
   stripePublishableKey?: string;
+  /** Reign payment session id. `clientSecret` then holds that session's client secret. */
+  reignSessionId?: string;
 }
 
 export interface CompleteCheckoutPayload {
   orderId: string;
   orderKey: string;
   paymentIntentId: string;
-  provider?: "stripe" | "paypal" | "affirm" | "afterpay" | "mock";
+  provider?: "stripe" | "paypal" | "affirm" | "afterpay" | "reign" | "mock";
 }
 
 export interface CreateOrderResult {

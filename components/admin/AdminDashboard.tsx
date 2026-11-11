@@ -104,6 +104,7 @@ export function AdminDashboard({
         merchantId: form.afterpay.merchantId,
         secret: form.afterpay.secret,
       },
+      reign: { secretKey: form.reign.secretKey },
     });
       setTests((current) => ({ ...current, [provider]: result }));
     } catch (testError) {
@@ -124,6 +125,7 @@ export function AdminDashboard({
     { id: "paypal", name: "PayPal", status: view.paypal.status },
     { id: "affirm", name: "Affirm", status: view.affirm.status },
     { id: "afterpay", name: "Afterpay", status: view.afterpay.status },
+    { id: "reign", name: "Reign", status: view.reign.status },
   ];
 
   return (
@@ -166,7 +168,7 @@ export function AdminDashboard({
           <div>
             <h1 className="font-display text-2xl tracking-tight">Payments</h1>
             <p className="text-sm text-muted-foreground">
-              {view.liveCount} of 4 ready at checkout
+              {view.liveCount} of {providers.length} ready at checkout
             </p>
           </div>
           <Button
@@ -180,7 +182,7 @@ export function AdminDashboard({
         </header>
 
         <main className="mx-auto max-w-4xl space-y-6 px-5 py-6 md:px-8 md:py-8">
-          <section className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <section className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
             {providers.map((provider) => (
               <a
                 key={provider.id}
@@ -394,6 +396,73 @@ export function AdminDashboard({
                 result={tests.afterpay}
               />
             </ProviderCard>
+
+            <ProviderCard
+              id="reign"
+              title="Reign"
+              detail="Payments API publishable key, secret key and Reign.js tag. USD only."
+              status={view.reign.status}
+              enabled={form.reign.enabled}
+              onEnabled={(enabled) =>
+                setForm((current) => ({ ...current, reign: { ...current.reign, enabled } }))
+              }
+            >
+              <Field
+                id="reign-pk"
+                label="Publishable key"
+                value={form.reign.publishableKey}
+                mono
+                onChange={(publishableKey) =>
+                  setForm((current) => ({ ...current, reign: { ...current.reign, publishableKey } }))
+                }
+              />
+              <SecretField
+                id="reign-sk"
+                label="Secret key"
+                hint={view.reign.secretHint}
+                value={form.reign.secretKey}
+                onChange={(secretKey) =>
+                  setForm((current) => ({ ...current, reign: { ...current.reign, secretKey } }))
+                }
+              />
+              <SecretField
+                id="reign-wh"
+                label="Webhook signing secret (optional)"
+                hint={view.reign.webhookHint}
+                value={form.reign.webhookSecret}
+                onChange={(webhookSecret) =>
+                  setForm((current) => ({ ...current, reign: { ...current.reign, webhookSecret } }))
+                }
+              />
+              <label className="block space-y-1.5 sm:col-span-2" htmlFor="reign-script">
+                <span className="text-xs font-medium text-muted-foreground">
+                  Reign.js script tag
+                </span>
+                <textarea
+                  id="reign-script"
+                  rows={3}
+                  value={form.reign.scriptTag}
+                  autoComplete="off"
+                  spellCheck={false}
+                  placeholder='<script src="https://js.reign-sandbox.com/payments/..." integrity="sha384-..." crossorigin="anonymous"></script>'
+                  onChange={(event) => {
+                    const scriptTag = event.target.value;
+                    setForm((current) => ({ ...current, reign: { ...current.reign, scriptTag } }));
+                  }}
+                  className="w-full rounded-lg border border-border bg-background px-3 py-2 font-mono text-[12px] outline-none transition-colors placeholder:text-muted-foreground focus:border-foreground"
+                />
+              </label>
+              <p className="text-xs leading-relaxed text-muted-foreground sm:col-span-2">
+                Create these under Developers, Payments API in the Reign portal, and add this site as an allowed origin. Test keys start with reign_test_ and rpk_test_. The webhook secret is only needed if you add {"/api/reign/webhook"} as an endpoint.
+              </p>
+              <CardActions
+                pending={pending}
+                provider="reign"
+                onClear={() => void clearProvider("reign")}
+                onTest={() => void test("reign")}
+                result={tests.reign}
+              />
+            </ProviderCard>
           </div>
         </main>
       </div>
@@ -427,6 +496,13 @@ function formFromView(view: AdminPaymentView): PaymentSettingsInput {
       merchantId: view.afterpay.merchantId,
       secret: "",
     },
+    reign: {
+      enabled: view.reign.enabled,
+      publishableKey: view.reign.publishableKey,
+      secretKey: "",
+      webhookSecret: "",
+      scriptTag: view.reign.scriptTag,
+    },
   };
 }
 
@@ -435,6 +511,7 @@ const GATEWAY_MARK: Record<PaymentProviderId, string> = {
   paypal: "/payments/paypal.svg",
   affirm: "/payments/affirm.svg",
   afterpay: "/payments/afterpay.svg",
+  reign: "/payments/reign.svg",
 };
 
 function GatewayMark({ id }: { id: PaymentProviderId }) {

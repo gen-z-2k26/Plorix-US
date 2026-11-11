@@ -18,7 +18,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PaymentBrandIcon } from "@/components/PaymentBrandIcon";
-import { AffirmPayment, PayPalPayment } from "@/components/PaymentStep";
+import { AffirmPayment, PayPalPayment, ReignPayment } from "@/components/PaymentStep";
 import {
   ExpressCheckoutRow,
   StripeCardCheckout,
@@ -123,7 +123,7 @@ function blockToAddress(
 }
 
 function methodLabel(kind: CheckoutPaymentKind) {
-  if (kind === "stripe") return "Credit card";
+  if (kind === "stripe" || kind === "reign") return "Credit card";
   if (kind === "paypal") return "PayPal";
   if (kind === "affirm") return "Affirm";
   return "Afterpay";
@@ -150,6 +150,7 @@ export function CheckoutPage() {
   const [paypalClientId, setPaypalClientId] = useState("");
   const [affirmPublicKey, setAffirmPublicKey] = useState("");
   const [affirmEnv, setAffirmEnv] = useState<"sandbox" | "live">("sandbox");
+  const [reign, setReign] = useState({ publishableKey: "", scriptSrc: "", scriptIntegrity: "" });
   const [isGift, setIsGift] = useState(false);
   const [sellerNote, setSellerNote] = useState("");
   const [showNote, setShowNote] = useState(false);
@@ -180,6 +181,11 @@ export function CheckoutPage() {
         setPaypalClientId(options.paypalClientId);
         setAffirmPublicKey(options.affirmPublicKey);
         setAffirmEnv(options.affirmEnv);
+        setReign({
+          publishableKey: options.reignPublishableKey,
+          scriptSrc: options.reignScriptSrc,
+          scriptIntegrity: options.reignScriptIntegrity,
+        });
         setPaymentKind((current) =>
           options.paymentMethods.some((method) => method.kind === current)
             ? current
@@ -1151,6 +1157,30 @@ export function CheckoutPage() {
                       amount: session.amount,
                       currency: session.currency,
                       email: session.email,
+                    };
+                  }}
+                  onPaid={finishPaid}
+                  onError={(message) => setErrors({ form: message })}
+                />
+              ) : paymentKind === "reign" ? (
+                <ReignPayment
+                  amount={cart.totals.total}
+                  currency={cart.totals.currency}
+                  publishableKey={reign.publishableKey}
+                  scriptSrc={reign.scriptSrc}
+                  scriptIntegrity={reign.scriptIntegrity}
+                  cardholderName={`${payBilling.firstName} ${payBilling.lastName}`.trim()}
+                  prepare={async () => {
+                    if (!validate()) return null;
+                    const session = await paySeparate("reign");
+                    if (!session?.reignSessionId) return null;
+                    return {
+                      orderId: session.orderId,
+                      orderKey: session.orderKey,
+                      sessionId: session.reignSessionId,
+                      clientSecret: session.clientSecret,
+                      amount: session.amount,
+                      currency: session.currency,
                     };
                   }}
                   onPaid={finishPaid}

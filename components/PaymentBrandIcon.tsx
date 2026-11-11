@@ -7,7 +7,7 @@ const ART: Partial<Record<PaymentIconSlug, string>> = {
   discover: "/payments/discover.svg",
   unionpay: "/payments/unionpay.svg",
   paypal: "/payments/paypal.svg",
-  afterpay: "/payments/afterpay.svg",
+  afterpay: "/payments/afterpay-badge.svg",
 };
 
 export function PaymentBrandIcon({

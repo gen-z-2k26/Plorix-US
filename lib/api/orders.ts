@@ -247,6 +247,32 @@ export async function markOrderPaid(
   }
 }
 
+export async function setOrderMeta(orderId: string, key: string, value: string) {
+  await withWooErrorHandling(async () => {
+    await wooPut(`orders/${orderId}`, { meta_data: [{ key, value }] });
+  });
+}
+
+/** Woo REST cannot filter by meta, so this scans the most recent unpaid orders. */
+export async function findUnpaidOrderByMeta(
+  key: string,
+  value: string,
+): Promise<WooOrder | null> {
+  return withWooErrorHandling(async () => {
+    const orders = await wooGet<WooOrder[]>("orders", {
+      status: "pending,failed,cancelled",
+      per_page: 100,
+      orderby: "date",
+      order: "desc",
+    });
+    return (
+      orders.find((order) =>
+        order.meta_data?.some((meta) => meta.key === key && meta.value === value),
+      ) ?? null
+    );
+  });
+}
+
 export async function cancelUnpaidOrder(orderId: string): Promise<void> {
   return withWooErrorHandling(async () => {
     const existing = await wooGet<WooOrder>(`orders/${orderId}`);
