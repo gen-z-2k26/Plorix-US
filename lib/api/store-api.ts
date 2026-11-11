@@ -128,9 +128,20 @@ async function storeRequest<T>(
   }
 
   if (!response.ok) {
-    const body = json as { message?: string; code?: string; data?: { cart?: RawStoreCart } } | null;
+    const body = json as {
+      message?: string;
+      code?: string;
+      data?: { cart?: RawStoreCart; details?: Record<string, { message?: string }> };
+    } | null;
+    const details = [
+      ...new Set(
+        Object.values(body?.data?.details ?? {})
+          .map((detail) => detail?.message?.trim())
+          .filter(Boolean),
+      ),
+    ];
     throw new WooCommerceApiError(
-      body?.message || "The cart could not be updated.",
+      details.length ? details.join(" ") : body?.message || "The cart could not be updated.",
       {
         status: response.status,
         code: body?.code,
