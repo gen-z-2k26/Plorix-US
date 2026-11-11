@@ -30,6 +30,13 @@ import { iconsForCheckoutMethods } from "@/lib/checkout-icons";
 import { useCartStore } from "@/lib/cart-store";
 import { useStore } from "@/lib/store-context";
 import { formatPrice } from "@/lib/format";
+import {
+  NATIVE_SELECT_CLASS,
+  addressAfterCountryChange,
+  deliveryLabels,
+  normalizeCountryCode,
+  regionError,
+} from "@/lib/checkout-address";
 import { emptyAddress, emptyStoreCart } from "@/lib/api/map-cart";
 import {
   completeCheckoutAction,
@@ -258,11 +265,15 @@ export function CheckoutPage() {
     if (!shipping.lastName.trim()) next.lastName = "Last name is required.";
     if (!shipping.address1.trim()) next.address1 = "Address is required.";
     if (!shipping.city.trim()) next.city = "City is required.";
-    if (!shipping.postcode.trim()) next.postcode = "Postal code is required.";
+    const labels = deliveryLabels(shipping.country);
+    if (!shipping.postcode.trim()) next.postcode = labels.postcodeError;
     if (!shipping.country.trim()) next.country = "Country is required.";
-    if (stateOptions.length && !shipping.state.trim()) {
-      next.state = "State is required.";
-    }
+    const region = regionError(
+      shipping.country,
+      shipping.state,
+      selectedCountry?.states ?? [],
+    );
+    if (region) next.state = region;
     const email = (same ? shipping.email : billing.email).trim();
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       next.email = "Enter a valid email.";
@@ -618,8 +629,9 @@ export function CheckoutPage() {
     .map((country) => country.code.trim().toUpperCase())
     .filter((code) => code.length === 2);
   const selectedCountry = countries.find(
-    (country) => country.code === shipping.country,
+    (country) => country.code === normalizeCountryCode(shipping.country),
   );
+  const labels = deliveryLabels(shipping.country);
   const stateOptions = (selectedCountry?.states ?? []).map((state) => ({
     value: state.code,
     label: state.name,
@@ -829,10 +841,10 @@ export function CheckoutPage() {
                       className="col-span-2"
                       id="country"
                       label="Country/Region"
-                      value={shipping.country}
+                      value={normalizeCountryCode(shipping.country)}
                       options={countryOptions}
                       onChange={(value) => {
-                        const next = { ...shipping, country: value, state: "" };
+                        const next = addressAfterCountryChange(shipping, value);
                         setShipping(next);
                         void refreshRates(next);
                       }}
@@ -886,7 +898,7 @@ export function CheckoutPage() {
                   />
                   <Field
                     id="postcode"
-                    label="Postal code"
+                    label={labels.postcode}
                     autoComplete="postal-code"
                     value={shipping.postcode}
                     error={errors.postcode}
@@ -906,7 +918,7 @@ export function CheckoutPage() {
                     <CheckoutSelect
                       className="col-span-2"
                       id="state"
-                      label="State / Province"
+                      label={labels.region}
                       value={shipping.state}
                       error={errors.state}
                       options={stateOptions}
@@ -920,7 +932,7 @@ export function CheckoutPage() {
                     <Field
                       className="col-span-2"
                       id="state"
-                      label="State / Province"
+                      label={labels.region}
                       autoComplete="address-level1"
                       value={shipping.state}
                       error={errors.state}
@@ -1315,7 +1327,7 @@ function CheckoutSelect({
         id={id}
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        className={cn(fieldShell, "appearance-none pr-10", value && "pt-4")}
+        className={cn(fieldShell, NATIVE_SELECT_CLASS, "appearance-none pr-10", value && "pt-4")}
       >
         <option value="">{label}</option>
         {options.map((option) => (
