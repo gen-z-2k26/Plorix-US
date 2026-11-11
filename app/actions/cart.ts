@@ -60,6 +60,18 @@ export async function shopNowAction(input: {
   try {
     if (input.emptyCart) {
       await clearStoreCart();
+    } else {
+      // Repeat Buy Now clicks set the line to the chosen quantity instead of stacking it.
+      const existing = (await getStoreCart()).items.find(
+        (item) => item.productId === String(input.id),
+      );
+      if (existing) {
+        const cart =
+          existing.quantity === quantity
+            ? await getStoreCart()
+            : await updateStoreCartItem({ key: existing.key, quantity });
+        return { ok: true, cart };
+      }
     }
     return { ok: true, cart: await addStoreCartItem({ id: input.id, quantity }) };
   } catch (error) {

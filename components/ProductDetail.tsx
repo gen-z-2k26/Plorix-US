@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Check, Share2 } from "lucide-react";
@@ -47,6 +47,7 @@ export function ProductDetail({
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
   const [busy, setBusy] = useState(false);
+  const cartLock = useRef(false);
   const [rejectedId, setRejectedId] = useState<string | null>(null);
   const inStock = product.inStock && rejectedId !== product.id;
   const [imageIndex, setImageIndex] = useState(0);
@@ -63,7 +64,8 @@ export function ProductDetail({
   }
 
   async function handleAdd() {
-    if (!inStock || busy) return;
+    if (!inStock || busy || cartLock.current) return;
+    cartLock.current = true;
     setBusy(true);
     try {
       await addProductToCart(product, quantity);
@@ -73,22 +75,25 @@ export function ProductDetail({
       noteConflict(error);
       setError(userErrorMessage(error, "Could not add to cart."));
     } finally {
+      cartLock.current = false;
       setBusy(false);
     }
   }
 
   async function handleShopNow() {
-    if (!inStock || busy) return;
+    if (!inStock || busy || cartLock.current) return;
+    cartLock.current = true;
     setBusy(true);
     try {
       await shopNowToCheckout(product, quantity, page.shopNowEmptyCart);
+      // Stay locked while the checkout route loads so extra clicks do nothing.
       router.push("/checkout");
     } catch (error) {
       noteConflict(error);
       setError(
         userErrorMessage(error, "Could not start checkout."),
       );
-    } finally {
+      cartLock.current = false;
       setBusy(false);
     }
   }
