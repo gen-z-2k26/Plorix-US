@@ -1,6 +1,7 @@
 "use server";
 
 import { headers } from "next/headers";
+import { ABANDONMENT_SESSION_META, noteCartForAbandonment } from "@/lib/api/cart-abandonment";
 import {
   cancelUnpaidOrder,
   createPendingOrderFromCart,
@@ -286,6 +287,12 @@ async function createCheckoutSession(
       order.status !== "cancelled" && order.status !== "failed";
     if (orderOk && details.customerNote?.trim()) {
       await setOrderCustomerNote(existing.orderId, details.customerNote);
+    }
+    if (orderOk) {
+      const abandonmentSession = await noteCartForAbandonment(cart);
+      if (abandonmentSession) {
+        await setOrderMeta(existing.orderId, ABANDONMENT_SESSION_META, abandonmentSession);
+      }
     }
     if (mockPayment && orderOk && isMockPaymentIntentId(existing.paymentIntentId)) {
       return {
