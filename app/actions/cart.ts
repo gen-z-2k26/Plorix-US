@@ -14,13 +14,25 @@ import {
   updateStoreCustomer,
 } from "@/lib/api/store-api";
 import { isCatalogConflict } from "@/lib/catalog-conflict";
-import { refreshCatalog } from "@/lib/cache-policy";
+import { refreshProductsById } from "@/lib/api/catalog-refresh";
 import { cartErrorMessage, type CartMutation } from "@/lib/cart-result";
 import type { Address, StoreCart } from "@/lib/types";
 
-function failedCart(error: unknown, fallback: string): CartMutation {
+async function cartProductIds() {
+  try {
+    return (await getStoreCart()).items.map((item) => item.productId);
+  } catch {
+    return [];
+  }
+}
+
+async function failedCart(
+  error: unknown,
+  fallback: string,
+  productIds?: number[],
+): Promise<CartMutation> {
   if (isCatalogConflict(error)) {
-    refreshCatalog();
+    await refreshProductsById(productIds ?? (await cartProductIds()));
     return {
       ok: false,
       message: cartErrorMessage(error, fallback),
@@ -47,7 +59,9 @@ export async function addItemToCartAction(input: {
   try {
     return { ok: true, cart: await addStoreCartItem({ id: input.id, quantity }) };
   } catch (error) {
-    return failedCart(error, "Could not add that product to the cart.");
+    return failedCart(error, "Could not add that product to the cart.", [
+      input.id,
+    ]);
   }
 }
 
@@ -75,7 +89,7 @@ export async function shopNowAction(input: {
     }
     return { ok: true, cart: await addStoreCartItem({ id: input.id, quantity }) };
   } catch (error) {
-    return failedCart(error, "Could not start checkout.");
+    return failedCart(error, "Could not start checkout.", [input.id]);
   }
 }
 

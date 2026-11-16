@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import Link from "next/link";
+import { IntentLink as Link } from "@/components/IntentLink";
 import { useRouter } from "next/navigation";
 import { Check, Share2 } from "lucide-react";
 import type {

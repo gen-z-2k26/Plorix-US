@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { IntentLink as Link } from "@/components/IntentLink";
 import { Menu, ShoppingBag, Star, X } from "lucide-react";
 import { Suspense, useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";

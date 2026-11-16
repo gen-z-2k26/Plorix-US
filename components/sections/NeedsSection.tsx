@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { IntentLink as Link } from "@/components/IntentLink";
 import { ArrowRight } from "lucide-react";
 import { StoreImage } from "@/components/StoreImage";
 import { SectionHeader } from "@/components/sections/SectionHeader";

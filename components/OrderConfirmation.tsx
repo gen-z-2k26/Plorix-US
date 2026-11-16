@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import { IntentLink as Link } from "@/components/IntentLink";
 import { Check, Copy, Mail, Package, Truck } from "lucide-react";
 import { completeCheckoutAction } from "@/app/actions/checkout";
 import { lookupGuestOrderAction } from "@/app/actions/orders";

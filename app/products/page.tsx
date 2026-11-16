@@ -28,7 +28,7 @@ function visibleCatalog(products: Product[]) {
   });
 }
 
-export const revalidate = 300;
+export const revalidate = 3600;
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSiteSettings();

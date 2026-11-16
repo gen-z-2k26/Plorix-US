@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { IntentLink as Link } from "@/components/IntentLink";
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { applyCouponAction } from "@/app/actions/cart";

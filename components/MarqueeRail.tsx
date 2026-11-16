@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { IntentLink as Link } from "@/components/IntentLink";
 import { cn } from "@/lib/utils";
 
 function BurstStar({ className }: { className?: string }) {

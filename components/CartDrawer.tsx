@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { IntentLink as Link } from "@/components/IntentLink";
 import { useState } from "react";
 import { AnimatePresence } from "motion/react";
 import {

@@ -12,7 +12,7 @@ import { toCardProduct } from "@/lib/catalog-card";
 import { isCatalogSlug } from "@/lib/catalog-slug";
 import { pageContainer } from "@/lib/layout";
 
-export const revalidate = 300;
+export const revalidate = 3600;
 
 export async function generateStaticParams() {
   try {

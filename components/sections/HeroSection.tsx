@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import { IntentLink as Link } from "@/components/IntentLink";
 import { ArrowRight } from "lucide-react";
 import type { StoreSettings } from "@/lib/types";
 import { StoreImage } from "@/components/StoreImage";

@@ -1,6 +1,6 @@
 import { wooGet, wooPost, wooPut } from "@/lib/api/client";
 import { isCatalogConflict } from "@/lib/catalog-conflict";
-import { refreshCatalog } from "@/lib/cache-policy";
+import { refreshProductsById } from "@/lib/api/catalog-refresh";
 import { withWooErrorHandling } from "@/lib/api/errors";
 import {
   ABANDONMENT_SESSION_META,
@@ -124,7 +124,9 @@ export async function createPendingOrderFromCart(
     try {
       return await createOrderRecord(cart, options);
     } catch (error) {
-      if (isCatalogConflict(error)) refreshCatalog();
+      if (isCatalogConflict(error)) {
+        await refreshProductsById(cart.items.map((item) => item.productId));
+      }
       throw error;
     }
   });
@@ -247,7 +249,9 @@ export async function markOrderPaid(
       transaction_id: transactionId,
     });
 
-    refreshCatalog();
+    await refreshProductsById(
+      (order.line_items || []).map((item) => item.product_id),
+    );
     const abandonment = existing.meta_data?.find(
       (meta) => meta.key === ABANDONMENT_SESSION_META,
     );
@@ -257,7 +261,12 @@ export async function markOrderPaid(
     return mapWooOrder(order);
     });
   } catch (error) {
-    if (isCatalogConflict(error)) refreshCatalog();
+    if (isCatalogConflict(error)) {
+      const order = await wooGet<WooOrder>(`orders/${orderId}`).catch(() => null);
+      await refreshProductsById(
+        (order?.line_items || []).map((item) => item.product_id),
+      );
+    }
     throw error;
   }
 }

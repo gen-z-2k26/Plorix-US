@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { IntentLink as Link } from "@/components/IntentLink";
 import { motion } from "motion/react";
 import type { Category, Product } from "@/lib/types";
 import { ProductCard } from "@/components/ProductCard";

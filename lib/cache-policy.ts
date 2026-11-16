@@ -1,7 +1,11 @@
 import { revalidatePath, revalidateTag, updateTag } from "next/cache";
 
-/** Home, shop, product, and collection pages. Stock and price stay inside this window. */
-export const STOCK_REVALIDATE_SECONDS = 5 * 60;
+/**
+ * Home, shop, product, and collection pages. Paid orders and cart conflicts
+ * refresh the affected products right away, so this window only bounds edits
+ * made in WooCommerce admin.
+ */
+export const STOCK_REVALIDATE_SECONDS = 60 * 60;
 
 /** About, policies, reviews, and other pages that do not show inventory. */
 export const CONTENT_REVALIDATE_SECONDS = 60 * 60;
@@ -14,38 +18,50 @@ export const PAYMENT_METHODS_REVALIDATE_SECONDS = 5 * 60;
 
 export const CATALOG_TAG = "woo-catalog";
 
+export function productTag(slug: string) {
+  return `woo-product:${slug}`;
+}
+
+function expireTag(tag: string) {
+  try {
+    updateTag(tag);
+  } catch {
+    try {
+      revalidateTag(tag, { expire: 0 });
+    } catch {
+      // Outside a request or action. The page still expires on its own.
+    }
+  }
+}
+
+function expirePath(path: string, type?: "page" | "layout") {
+  try {
+    revalidatePath(path, type);
+  } catch {
+    // Path refresh only works inside a request.
+  }
+}
+
 /**
- * Drops cached catalog pages after WooCommerce disagrees with them, or after
- * an order is paid and stock has changed. The next view rebuilds once.
+ * Drops cached data and pages for the given products only. Every other
+ * product page keeps its cached copy.
+ */
+export function refreshProducts(slugs: string[]) {
+  for (const slug of new Set(slugs.filter(Boolean))) {
+    expireTag(productTag(slug));
+    expirePath(`/products/${slug}`);
+  }
+}
+
+/**
+ * Drops every cached catalog page. Expensive: each product and collection
+ * page rebuilds on its next view. Reserve for changes that affect listings,
+ * such as a product selling out.
  */
 export function refreshCatalog() {
-  try {
-    updateTag(CATALOG_TAG);
-  } catch {
-    try {
-      revalidateTag(CATALOG_TAG, { expire: 0 });
-    } catch {
-      // This process already missed the tag. The stock pages still expire on their own.
-    }
-  }
-
-  for (const path of ["/", "/products"]) {
-    try {
-      revalidatePath(path);
-    } catch {
-      // Path refresh only works inside a request.
-    }
-  }
-
-  try {
-    revalidatePath("/products/[slug]", "page");
-  } catch {
-    // Same as above.
-  }
-
-  try {
-    revalidatePath("/collection/[slug]", "page");
-  } catch {
-    // Same as above.
-  }
+  expireTag(CATALOG_TAG);
+  expirePath("/");
+  expirePath("/products");
+  expirePath("/products/[slug]", "page");
+  expirePath("/collection/[slug]", "page");
 }

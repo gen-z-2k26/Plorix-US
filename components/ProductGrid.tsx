@@ -1,6 +1,6 @@
 import type { Product } from "@/lib/types";
 import { ProductCard } from "@/components/ProductCard";
-import Link from "next/link";
+import { IntentLink as Link } from "@/components/IntentLink";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 

@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import Link from "next/link";
+import { IntentLink as Link } from "@/components/IntentLink";
 import { ContactForm } from "@/components/ContactForm";
 import {
   BlockView,

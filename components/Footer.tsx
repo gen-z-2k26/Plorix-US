@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { IntentLink as Link } from "@/components/IntentLink";
 import type { StoreSettings } from "@/lib/types";
 import { BrandLogo } from "@/components/BrandLogo";
 import { pageContainer } from "@/lib/layout";

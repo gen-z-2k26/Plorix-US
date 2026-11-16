@@ -2,7 +2,12 @@ import { unstable_cache } from "next/cache";
 import { cache } from "react";
 import site from "@/data/site.json";
 import pageContent from "@/data/pages.json";
-import { CATALOG_TAG, CONTENT_REVALIDATE_SECONDS, STOCK_REVALIDATE_SECONDS } from "@/lib/cache-policy";
+import {
+  CATALOG_TAG,
+  CONTENT_REVALIDATE_SECONDS,
+  STOCK_REVALIDATE_SECONDS,
+  productTag,
+} from "@/lib/cache-policy";
 import { isCatalogSlug } from "@/lib/catalog-slug";
 import { normalizeCountryCode } from "@/lib/checkout-address";
 import {
@@ -274,18 +279,22 @@ const readProducts = unstable_cache(
   { revalidate: STOCK_REVALIDATE_SECONDS, tags: [CATALOG_TAG] },
 );
 
-const readProductBySlug = unstable_cache(
-  async (slug: string) => {
-    const data = await wooGet<WooProduct[]>("products", {
-      slug,
-      _fields: PRODUCT_FIELDS,
-    });
-    const [product] = data;
-    return product ? mapWooProduct(product) : null;
-  },
-  ["woo-product-by-slug"],
-  { revalidate: STOCK_REVALIDATE_SECONDS, tags: [CATALOG_TAG] },
-);
+const readProductBySlug = (slug: string) =>
+  unstable_cache(
+    async () => {
+      const data = await wooGet<WooProduct[]>("products", {
+        slug,
+        _fields: PRODUCT_FIELDS,
+      });
+      const [product] = data;
+      return product ? mapWooProduct(product) : null;
+    },
+    ["woo-product-by-slug", slug],
+    {
+      revalidate: STOCK_REVALIDATE_SECONDS,
+      tags: [CATALOG_TAG, productTag(slug)],
+    },
+  )();
 
 const readCategories = unstable_cache(
   async () => {

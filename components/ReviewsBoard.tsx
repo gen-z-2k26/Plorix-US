@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
+import { IntentLink as Link } from "@/components/IntentLink";
 import { BadgeCheck } from "lucide-react";
 import { ReviewStars } from "@/components/ReviewStars";
 import { Badge } from "@/components/ui/badge";
