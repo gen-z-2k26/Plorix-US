@@ -279,8 +279,18 @@ export function CheckoutPage() {
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       next.email = "Enter a valid email.";
     }
+    const missing = Object.keys(next).length > 0;
+    if (missing) next.form = "Fill in all the required fields.";
     setErrors(next);
-    return Object.keys(next).length === 0;
+    if (missing) {
+      queueMicrotask(() => {
+        document.querySelector("[aria-invalid='true']")?.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      });
+    }
+    return !missing;
   }
 
   function billingAddress() {
@@ -316,7 +326,7 @@ export function CheckoutPage() {
     rateId?: string | null;
   }): Promise<StartedCheckout> {
     if (!input.skipValidation && !validate()) {
-      return { ok: false, message: "Check the highlighted fields." };
+      return { ok: false, message: "Fill in all the required fields." };
     }
     if (!cart.items.length) {
       return { ok: false, message: "Your cart is empty." };
@@ -802,6 +812,11 @@ export function CheckoutPage() {
                 else if (paymentKind === "stripe") payRef.current?.();
               }}
             >
+              {errors.form ? (
+                <p className="text-sm text-destructive" role="alert">
+                  {errors.form}
+                </p>
+              ) : null}
               {stripeReady ? (
                 <ExpressCheckoutRow
                   needsShipping={cart.needsShipping}
@@ -1356,7 +1371,6 @@ function OrderSummary({ cart }: { cart: StoreCart }) {
   const setCart = useCartStore((state) => state.setCart);
   const [coupon, setCoupon] = useState("");
   const [couponBusy, setCouponBusy] = useState(false);
-  const [showCoupon, setShowCoupon] = useState(false);
   const [qtyBusy, setQtyBusy] = useState("");
   const shippingFree = cart.hasCalculatedShipping && cart.totals.shipping <= 0;
 
@@ -1477,34 +1491,24 @@ function OrderSummary({ cart }: { cart: StoreCart }) {
         ))}
       </ul>
       <div className="mt-5">
-        {showCoupon || cart.coupons.length ? (
-          <div className="flex gap-2">
-            <Input
-              value={coupon}
-              onChange={(event) => setCoupon(event.target.value)}
-              placeholder="Discount code"
-              aria-label="Discount code"
-              className="h-10 rounded-md border-border bg-background"
-            />
-            <Button
-              type="button"
-              variant="outline"
-              className="h-10 rounded-md"
-              disabled={couponBusy || !coupon.trim()}
-              onClick={() => void applyCoupon()}
-            >
-              Apply
-            </Button>
-          </div>
-        ) : (
-          <button
+        <div className="flex gap-2">
+          <Input
+            value={coupon}
+            onChange={(event) => setCoupon(event.target.value)}
+            placeholder="Discount code"
+            aria-label="Discount code"
+            className="h-10 rounded-md border-border bg-background"
+          />
+          <Button
             type="button"
-            className="text-sm text-muted-foreground underline-offset-4 hover:underline"
-            onClick={() => setShowCoupon(true)}
+            variant="outline"
+            className="h-10 rounded-md"
+            disabled={couponBusy || !coupon.trim()}
+            onClick={() => void applyCoupon()}
           >
-            Discount code
-          </button>
-        )}
+            Apply
+          </Button>
+        </div>
         {cart.coupons.map((entry) => (
           <div key={entry.code} className="mt-2 flex items-center justify-between text-sm">
             <span className="text-muted-foreground">{entry.code}</span>

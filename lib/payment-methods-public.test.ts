@@ -6,11 +6,11 @@ describe("public payment methods", () => {
   it("lists every option, marking the ones the checkout has on", () => {
     const list = publicPaymentMethods([{ kind: "stripe" }, { kind: "afterpay" }]);
     assert.deepEqual(list, [
-      { kind: "paypal", title: "PayPal", enabled: false },
       { kind: "stripe", title: "Card", enabled: true },
+      { kind: "afterpay", title: "Afterpay", enabled: true },
+      { kind: "paypal", title: "PayPal", enabled: false },
       { kind: "reign", title: "Card", enabled: false },
       { kind: "affirm", title: "Affirm", enabled: false },
-      { kind: "afterpay", title: "Afterpay", enabled: true },
     ]);
   });
 

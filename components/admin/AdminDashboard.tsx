@@ -2,7 +2,16 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { CreditCard, Loader2, LogOut, Store } from "lucide-react";
+import { Reorder, useDragControls } from "motion/react";
+import {
+  ChevronDown,
+  ChevronUp,
+  CreditCard,
+  GripVertical,
+  Loader2,
+  LogOut,
+  Store,
+} from "lucide-react";
 import {
   clearProviderAction,
   logoutAdminAction,
@@ -49,7 +58,6 @@ export function AdminDashboard({
     Partial<Record<PaymentProviderId, { ok: boolean; message: string }>>
   >({});
   const [pending, setPending] = useState("");
-
   async function save() {
     setPending("save");
     setError("");
@@ -120,13 +128,36 @@ export function AdminDashboard({
     }
   }
 
-  const providers: { id: PaymentProviderId; name: string; status: ProviderStatus }[] = [
-    { id: "stripe", name: "Stripe", status: view.stripe.status },
-    { id: "paypal", name: "PayPal", status: view.paypal.status },
-    { id: "affirm", name: "Affirm", status: view.affirm.status },
-    { id: "afterpay", name: "Afterpay", status: view.afterpay.status },
-    { id: "reign", name: "Reign", status: view.reign.status },
-  ];
+  const catalog: Record<PaymentProviderId, { name: string; status: ProviderStatus }> = {
+    stripe: { name: "Stripe", status: view.stripe.status },
+    paypal: { name: "PayPal", status: view.paypal.status },
+    affirm: { name: "Affirm", status: view.affirm.status },
+    afterpay: { name: "Afterpay", status: view.afterpay.status },
+    reign: { name: "Reign", status: view.reign.status },
+  };
+  const providers = form.order.map((id) => ({ id, ...catalog[id] }));
+
+  function cardDrag(id: PaymentProviderId) {
+    return { rank: form.order.indexOf(id) };
+  }
+
+  function move(id: PaymentProviderId, delta: number) {
+    const target = form.order[form.order.indexOf(id) + delta];
+    if (target) reorder(id, target);
+  }
+
+  function reorder(from: PaymentProviderId, to: PaymentProviderId) {
+    if (from === to) return;
+    setForm((current) => {
+      const next = [...current.order];
+      const fromIndex = next.indexOf(from);
+      const toIndex = next.indexOf(to);
+      if (fromIndex < 0 || toIndex < 0) return current;
+      next.splice(fromIndex, 1);
+      next.splice(toIndex, 0, from);
+      return { ...current, order: next };
+    });
+  }
 
   return (
     <div className="min-h-screen bg-background text-foreground lg:grid lg:h-screen lg:grid-cols-[232px_1fr] lg:overflow-hidden">
@@ -182,23 +213,34 @@ export function AdminDashboard({
         </header>
 
         <main className="mx-auto max-w-4xl space-y-6 px-5 py-6 md:px-8 md:py-8">
-          <section className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-            {providers.map((provider) => (
-              <a
-                key={provider.id}
-                href={`#${provider.id}`}
-                className="rounded-2xl border border-border bg-card px-4 py-3.5 transition-colors hover:border-foreground/20"
-              >
-                <GatewayMark id={provider.id} />
-                <span className="mt-3 flex items-center gap-2 text-sm font-medium">
-                  <span className={`size-1.5 rounded-full ${STATUS_DOT[provider.status]}`} />
-                  {provider.name}
-                </span>
-                <span className="mt-0.5 block text-xs text-muted-foreground">
-                  {STATUS_LABEL[provider.status]}
-                </span>
-              </a>
-            ))}
+          <section className="rounded-2xl border border-border bg-card">
+            <div className="border-b border-border px-5 py-4">
+              <h2 className="text-[15px] font-semibold tracking-tight">Checkout order</h2>
+              <p className="mt-0.5 text-xs text-muted-foreground">
+                Drag a row or use the arrows. Checkout lists the methods that are on in this order.
+              </p>
+            </div>
+            <Reorder.Group
+              as="ol"
+              axis="y"
+              values={form.order}
+              onReorder={(order: PaymentProviderId[]) =>
+                setForm((current) => ({ ...current, order }))
+              }
+              className="relative p-1.5"
+            >
+              {providers.map((provider, index) => (
+                <OrderRow
+                  key={provider.id}
+                  id={provider.id}
+                  name={provider.name}
+                  status={provider.status}
+                  index={index}
+                  last={index === providers.length - 1}
+                  onMove={(delta) => move(provider.id, delta)}
+                />
+              ))}
+            </Reorder.Group>
           </section>
 
           {!view.keyReady || !view.blobReady ? (
@@ -221,8 +263,9 @@ export function AdminDashboard({
             Turn a method on to show it at checkout. Leave a secret blank to keep the saved one. Secrets never return to this page.
           </p>
 
-          <div className="space-y-4">
+          <div className="flex flex-col gap-4">
             <ProviderCard
+              {...cardDrag("stripe")}
               id="stripe"
               title="Stripe"
               detail="Publishable key and secret or restricted key"
@@ -272,6 +315,7 @@ export function AdminDashboard({
             </ProviderCard>
 
             <ProviderCard
+              {...cardDrag("paypal")}
               id="paypal"
               title="PayPal"
               detail="Client ID and client secret"
@@ -313,6 +357,7 @@ export function AdminDashboard({
             </ProviderCard>
 
             <ProviderCard
+              {...cardDrag("affirm")}
               id="affirm"
               title="Affirm"
               detail="Public key and private key"
@@ -354,6 +399,7 @@ export function AdminDashboard({
             </ProviderCard>
 
             <ProviderCard
+              {...cardDrag("afterpay")}
               id="afterpay"
               title="Afterpay"
               detail="Merchant ID and secret key"
@@ -398,6 +444,7 @@ export function AdminDashboard({
             </ProviderCard>
 
             <ProviderCard
+              {...cardDrag("reign")}
               id="reign"
               title="Reign"
               detail="Payments API publishable key, secret key and Reign.js tag. USD only."
@@ -472,6 +519,7 @@ export function AdminDashboard({
 
 function formFromView(view: AdminPaymentView): PaymentSettingsInput {
   return {
+    order: view.order,
     stripe: {
       enabled: view.stripe.enabled,
       publishableKey: view.stripe.publishableKey,
@@ -527,6 +575,80 @@ function GatewayMark({ id }: { id: PaymentProviderId }) {
   );
 }
 
+function OrderRow({
+  id,
+  name,
+  status,
+  index,
+  last,
+  onMove,
+}: {
+  id: PaymentProviderId;
+  name: string;
+  status: ProviderStatus;
+  index: number;
+  last: boolean;
+  onMove: (delta: number) => void;
+}) {
+  const controls = useDragControls();
+  return (
+    <Reorder.Item
+      as="li"
+      value={id}
+      dragListener={false}
+      dragControls={controls}
+      layout="position"
+      transition={{ type: "spring", stiffness: 500, damping: 40 }}
+      whileDrag={{
+        scale: 1.02,
+        boxShadow: "0 12px 32px -12px rgba(0,0,0,0.35)",
+        zIndex: 10,
+      }}
+      className="relative flex items-center gap-3 rounded-xl bg-card px-2 py-2 select-none"
+    >
+      <button
+        type="button"
+        aria-label={`Drag ${name}`}
+        onPointerDown={(event) => controls.start(event)}
+        className="cursor-grab touch-none rounded-md p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground active:cursor-grabbing"
+      >
+        <GripVertical className="size-4" aria-hidden />
+      </button>
+      <span className="w-4 text-center text-xs font-medium text-muted-foreground tabular-nums">
+        {index + 1}
+      </span>
+      <GatewayMark id={id} />
+      <a href={`#${id}`} className="min-w-0 flex-1 text-sm font-medium hover:underline">
+        {name}
+      </a>
+      <span className="hidden items-center gap-1.5 text-xs text-muted-foreground sm:inline-flex">
+        <span className={`size-1.5 rounded-full ${STATUS_DOT[status]}`} />
+        {STATUS_LABEL[status]}
+      </span>
+      <div className="flex items-center">
+        <button
+          type="button"
+          aria-label={`Move ${name} up`}
+          disabled={index === 0}
+          onClick={() => onMove(-1)}
+          className="rounded-md p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground disabled:opacity-30 disabled:hover:bg-transparent"
+        >
+          <ChevronUp className="size-4" aria-hidden />
+        </button>
+        <button
+          type="button"
+          aria-label={`Move ${name} down`}
+          disabled={last}
+          onClick={() => onMove(1)}
+          className="rounded-md p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground disabled:opacity-30 disabled:hover:bg-transparent"
+        >
+          <ChevronDown className="size-4" aria-hidden />
+        </button>
+      </div>
+    </Reorder.Item>
+  );
+}
+
 function ProviderCard({
   id,
   title,
@@ -536,6 +658,7 @@ function ProviderCard({
   onEnabled,
   mode,
   onMode,
+  rank,
   children,
 }: {
   id: PaymentProviderId;
@@ -546,10 +669,15 @@ function ProviderCard({
   onEnabled: (enabled: boolean) => void;
   mode?: PaymentMode;
   onMode?: (mode: PaymentMode) => void;
+  rank: number;
   children: React.ReactNode;
 }) {
   return (
-    <section id={id} className="scroll-mt-24 overflow-hidden rounded-2xl border border-border bg-card">
+    <section
+      id={id}
+      style={{ order: rank }}
+      className="scroll-mt-24 overflow-hidden rounded-2xl border border-border bg-card"
+    >
       <div className="flex flex-wrap items-center gap-4 border-b border-border px-5 py-4">
         <GatewayMark id={id} />
         <div className="min-w-0 flex-1">

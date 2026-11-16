@@ -89,11 +89,45 @@ export async function createPayPalOrder(input: {
   return data.id;
 }
 
+type PayPalOrderBody = {
+  status?: string;
+  name?: string;
+  message?: string;
+  details?: Array<{ issue?: string; description?: string }>;
+  purchase_units?: Array<{
+    custom_id?: string;
+    reference_id?: string;
+    payments?: {
+      captures?: Array<{
+        id?: string;
+        status?: string;
+        amount?: { value?: string; currency_code?: string };
+      }>;
+    };
+  }>;
+};
+
+function completedCapture(data: PayPalOrderBody) {
+  const unit = data.purchase_units?.[0];
+  const capture = unit?.payments?.captures?.find((entry) => entry.status === "COMPLETED") ||
+    unit?.payments?.captures?.[0];
+  if (data.status !== "COMPLETED" || capture?.status !== "COMPLETED" || !capture.id) {
+    return null;
+  }
+  return {
+    captureId: capture.id,
+    orderId: unit?.custom_id || unit?.reference_id || "",
+    amount: Number(capture.amount?.value || 0),
+    currency: capture.amount?.currency_code || "",
+  };
+}
+
 export async function capturePayPalOrder(paypalOrderId: string) {
   const account = await paypalAccount();
   const token = await paypalToken();
+  const base = paypalBase(account.mode);
   const response = await fetch(
-    `${paypalBase(account.mode)}/v2/checkout/orders/${encodeURIComponent(paypalOrderId)}/capture`,
+    `${base}/v2/checkout/orders/${encodeURIComponent(paypalOrderId)}/capture`,
     {
       method: "POST",
       headers: {
@@ -102,33 +136,20 @@ export async function capturePayPalOrder(paypalOrderId: string) {
       },
     },
   );
-  const data = (await response.json()) as {
-    status?: string;
-    message?: string;
-    purchase_units?: Array<{
-      custom_id?: string;
-      reference_id?: string;
-      payments?: {
-        captures?: Array<{
-          id?: string;
-          status?: string;
-          amount?: { value?: string; currency_code?: string };
-        }>;
-      };
-    }>;
-  };
-  if (!response.ok) {
-    throw new Error(data.message || "PayPal capture failed.");
+  const data = (await response.json()) as PayPalOrderBody;
+  const captured = completedCapture(data);
+  if (response.ok && captured) return captured;
+  const issue = data.details?.[0]?.issue || "";
+  if (issue === "ORDER_ALREADY_CAPTURED" || data.status === "COMPLETED") {
+    const existing = await fetch(
+      `${base}/v2/checkout/orders/${encodeURIComponent(paypalOrderId)}`,
+      { headers: { Authorization: `Bearer ${token}` } },
+    );
+    const order = (await existing.json()) as PayPalOrderBody;
+    const already = completedCapture(order);
+    if (existing.ok && already) return already;
   }
-  const unit = data.purchase_units?.[0];
-  const capture = unit?.payments?.captures?.[0];
-  if (data.status !== "COMPLETED" || capture?.status !== "COMPLETED" || !capture.id) {
-    throw new Error("PayPal payment was not completed.");
-  }
-  return {
-    captureId: capture.id,
-    orderId: unit?.custom_id || unit?.reference_id || "",
-    amount: Number(capture.amount?.value || 0),
-    currency: capture.amount?.currency_code || "",
-  };
+  throw new Error(
+    data.details?.[0]?.description || data.message || "PayPal capture failed.",
+  );
 }

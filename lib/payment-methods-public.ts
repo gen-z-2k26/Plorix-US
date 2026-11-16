@@ -24,7 +24,12 @@ export function publicPaymentMethods(
   enabled: ReadonlyArray<Pick<CheckoutPaymentMethod, "kind">>,
 ): PublicPaymentMethod[] {
   const on = new Set(enabled.map((method) => method.kind));
-  return PUBLIC_METHODS.map((method) => ({
+  const byKind = new Map(PUBLIC_METHODS.map((method) => [method.kind, method]));
+  const ordered = enabled
+    .map((method) => byKind.get(method.kind))
+    .filter((method): method is (typeof PUBLIC_METHODS)[number] => Boolean(method));
+  const rest = PUBLIC_METHODS.filter((method) => !on.has(method.kind));
+  return [...ordered, ...rest].map((method) => ({
     kind: method.kind,
     title: method.title,
     enabled: on.has(method.kind),

@@ -579,15 +579,31 @@ async function completeCheckout(
   const provider = payload.provider;
 
   if (provider === "paypal") {
-    const captured = await capturePayPalOrder(paymentIntentId);
-    if (captured.orderId && captured.orderId !== orderId) {
+    const pending = await getPendingCheckout();
+    const pendingPaypalId = pending?.paymentIntentId.startsWith("paypal:")
+      ? pending.paymentIntentId.slice("paypal:".length)
+      : "";
+    const paypalOrderId = paymentIntentId || pendingPaypalId;
+    const resolvedOrderId = orderId || pending?.orderId || "";
+    const resolvedKey = orderKey || pending?.orderKey || "";
+    if (!resolvedOrderId || !paypalOrderId) {
+      throw new Error("Payment confirmation is incomplete.");
+    }
+    if (pendingPaypalId && paypalOrderId !== pendingPaypalId) {
       throw new Error("Payment does not match this order.");
     }
-    const order = await getOrder(orderId);
+    if (orderId && pending?.orderId && orderId !== pending.orderId) {
+      throw new Error("Payment does not match this order.");
+    }
+    const captured = await capturePayPalOrder(paypalOrderId);
+    if (captured.orderId && captured.orderId !== resolvedOrderId) {
+      throw new Error("Payment does not match this order.");
+    }
+    const order = await getOrder(resolvedOrderId);
     if (Math.abs(captured.amount - Number(order.total || 0)) > 0.05) {
       throw new Error("Payment amount does not match the order.");
     }
-    return finishPaid(orderId, orderKey, captured.captureId, "paypal");
+    return finishPaid(resolvedOrderId, resolvedKey, captured.captureId, "paypal");
   }
 
   if (provider === "affirm") {
